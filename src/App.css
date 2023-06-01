@@ -1,0 +1,29 @@
+:root {
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  font-size: 14pt;
+  line-height: 1em;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  height: 100%;
+  padding: 40px;
+}
+
+header,
+section,
+footer {
+  padding: 40px;
+}

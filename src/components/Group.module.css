@@ -1,0 +1,21 @@
+.group {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  border: solid 1px black;
+}
+
+@media (max-width: 1000px) {
+  .group {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+@media (max-width: 600px) {
+  .group {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}

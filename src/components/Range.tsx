@@ -19,11 +19,13 @@ const Range = ({
   defaultValue,
   onChange,
 }: Props) => (
-  <label
-    className={classes.container}
-    onDoubleClick={() => onChange(defaultValue)}
-  >
-    <span className={classes.label}>{label}</span>
+  <label className={classes.container}>
+    <span
+      className={classes.label}
+      onDoubleClick={() => onChange(defaultValue)}
+    >
+      {label}
+    </span>
     <input
       type="range"
       min={min}

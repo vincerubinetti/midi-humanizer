@@ -33,7 +33,7 @@ const Drift = () => (
     <Range
       label="Seed"
       min={0}
-      max={100}
+      max={999}
       step={1}
       value={useState((state) => state.drift.seed)}
       defaultValue={defaults.drift.seed}

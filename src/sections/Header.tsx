@@ -1,10 +1,10 @@
-const Footer = () => (
-  <footer>
-    <b>MIDI Humanizer</b> |{" "}
+const Header = () => (
+  <header>
+    <h1>MIDI Humanizer</h1>
     <a href="https://github.com/vincerubinetti/midi-humanizer" target="_blank">
       Source on GitHub
     </a>
-  </footer>
+  </header>
 );
 
-export default Footer;
+export default Header;

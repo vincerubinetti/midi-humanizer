@@ -2,6 +2,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  width: 200px;
 }
 
 .label {

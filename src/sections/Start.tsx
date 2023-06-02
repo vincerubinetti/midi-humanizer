@@ -20,7 +20,7 @@ const Start = () => (
     <Range
       label="Seed"
       min={0}
-      max={100}
+      max={999}
       step={1}
       value={useState((state) => state.start.seed)}
       defaultValue={defaults.start.seed}

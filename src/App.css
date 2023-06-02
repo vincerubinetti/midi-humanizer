@@ -23,7 +23,6 @@ body {
   margin: 0;
   font-size: 14pt;
   font-weight: 300;
-  line-height: 1em;
   background: var(--white);
 }
 
@@ -40,10 +39,21 @@ main {
   padding: 40px;
 }
 
-header,
-footer {
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 40px;
   padding: 40px;
+  padding-bottom: 0;
   text-align: center;
+}
+
+h1 {
+  display: inline-block;
+  margin: 0;
+  font-weight: 500;
 }
 
 section {
@@ -78,10 +88,6 @@ button:hover {
 input {
   font: inherit;
   cursor: pointer;
-}
-
-b {
-  font-weight: 500;
 }
 
 a {

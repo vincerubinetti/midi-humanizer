@@ -20,7 +20,7 @@ const Duration = () => (
     <Range
       label="Seed"
       min={0}
-      max={100}
+      max={999}
       step={1}
       value={useState((state) => state.duration.seed)}
       defaultValue={defaults.duration.seed}

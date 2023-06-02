@@ -1,20 +1,77 @@
 .container {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
+  gap: 5px;
 }
 
 .label {
   width: 50px;
+  padding-left: 10px;
 }
 
 .input {
   width: 0;
   flex-grow: 1;
+  margin: 0;
+  padding: 15px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+
+.input::-webkit-slider-runnable-track {
+  height: 5px;
+  border-radius: 999px;
+  background: var(--off-white);
+  transition: background var(--fast);
+}
+
+.input::-webkit-slider-thumb {
+  height: 15px;
+  width: 15px;
+  margin-top: -5px;
+  background: var(--gray);
+  border-radius: 999px;
+  -webkit-appearance: none;
+  appearance: none;
+  transition: background var(--fast);
+}
+
+.input::-moz-range-track {
+  height: 5px;
+  border-radius: 999px;
+  background: var(--off-white);
+  transition: background var(--fast);
+}
+
+.input::-moz-range-thumb {
+  height: 15px;
+  width: 15px;
+  border: none;
+  border-radius: 999px;
+  background: var(--gray);
+  transition: background var(--fast);
+}
+
+.input:hover::-webkit-slider-runnable-track {
+  background: var(--primary);
+}
+
+.input:hover::-moz-range-track {
+  background: var(--primary);
+}
+
+.input:hover.input::-moz-range-track {
+  background: var(--dark-gray);
+}
+
+.input:hover::-webkit-slider-thumb {
+  background: var(--dark-gray);
 }
 
 .value {
-  width: 50px;
+  width: 60px;
   height: 30px;
+  border: none;
+  border-radius: var(--rounded);
 }

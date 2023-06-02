@@ -1,15 +1,16 @@
 import Group from "@/components/Group";
 import Range from "@/components/Range";
-import { useState } from "@/global/state";
+import { defaults, useState } from "@/global/state";
 
 const Start = () => (
-  <Group label="Note start">
+  <Group label="Note starts">
     <Range
       label="Rand."
       min={0}
       max={20}
       step={1}
       value={useState((state) => state.start.randomness)}
+      defaultValue={defaults.start.randomness}
       onChange={(value) =>
         useState.setState((state) => ({
           start: { ...state.start, randomness: value },
@@ -22,6 +23,7 @@ const Start = () => (
       max={100}
       step={1}
       value={useState((state) => state.start.seed)}
+      defaultValue={defaults.start.seed}
       onChange={(value) =>
         useState.setState((state) => ({
           start: { ...state.start, seed: value },
@@ -34,6 +36,7 @@ const Start = () => (
       max={20}
       step={1}
       value={useState((state) => state.start.offset)}
+      defaultValue={defaults.start.offset}
       onChange={(value) =>
         useState.setState((state) => ({
           start: { ...state.start, offset: value },

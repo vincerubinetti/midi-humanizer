@@ -1,21 +1,21 @@
 .group {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  align-items: flex-start;
+  gap: 10px 20px;
   width: 100%;
+  margin: 0;
+  margin-top: 20px;
   padding: 10px;
-  border: solid 1px black;
+  border: none;
+  border-radius: var(--rounded);
+  background: var(--white);
+  box-shadow: var(--shadow);
 }
 
-@media (max-width: 1000px) {
-  .group {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-
-@media (max-width: 600px) {
-  .group {
-    grid-template-columns: repeat(1, 1fr);
-  }
+.group legend {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  color: var(--dark-gray);
 }

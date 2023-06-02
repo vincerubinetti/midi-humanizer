@@ -1,19 +1,37 @@
 :root {
+  --primary: #2196f3;
+  --secondary: #1976d2;
+
+  --white: white;
+  --off-white: #eceff1;
+  --light-gray: #cfd8dc;
+  --gray: #90a4ae;
+  --dark-gray: #263238;
+
+  --shadow: 0 0 10px #0002;
+  --rounded: 5px;
+  --fast: 0.25s ease;
 }
 
 * {
   box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 body {
   min-height: 100vh;
   margin: 0;
   font-size: 14pt;
+  font-weight: 300;
   line-height: 1em;
+  background: var(--white);
 }
 
 #root {
+  height: 100%;
+}
+
+main {
   display: flex;
   justify-content: center;
   gap: 40px;
@@ -23,7 +41,54 @@ body {
 }
 
 header,
-section,
 footer {
   padding: 40px;
+  text-align: center;
+}
+
+section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 40px;
+  width: 100%;
+}
+
+@media (max-width: 800px) {
+  section {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+button {
+  padding: 10px;
+  border: none;
+  border-radius: var(--rounded);
+  background: var(--off-white);
+  color: var(--dark-gray);
+  font: inherit;
+  cursor: pointer;
+  transition: background var(--fast), color var(--fast);
+}
+
+button:hover {
+  background: var(--primary);
+  color: var(--white);
+}
+
+input {
+  font: inherit;
+  cursor: pointer;
+}
+
+b {
+  font-weight: 500;
+}
+
+a {
+  color: var(--primary);
+  transition: color var(--fast);
+}
+
+a:hover {
+  color: var(--dark-gray);
 }

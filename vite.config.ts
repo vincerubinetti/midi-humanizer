@@ -3,9 +3,8 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import svgr from "vite-plugin-svgr";
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.GITHUB_ACTIONS ? "/compendium_website/" : "/",
+  base: process.env.GITHUB_ACTIONS ? "/midi-humanizer/" : "/",
   plugins: [react(), svgr()],
   resolve: {
     alias: {

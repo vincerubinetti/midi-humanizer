@@ -1,20 +1,5 @@
-.container {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  width: 200px;
-}
-
-.label {
-  width: 50px;
-  padding-left: 10px;
-}
-
 .input {
-  width: 0;
-  flex-grow: 1;
-  margin: 0;
-  padding: 15px;
+  padding: 10px 0;
   -webkit-appearance: none;
   appearance: none;
   background: transparent;
@@ -71,7 +56,6 @@
 }
 
 .value {
-  width: 60px;
   height: 30px;
   border: none;
   border-radius: var(--rounded);

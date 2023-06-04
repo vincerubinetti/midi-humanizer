@@ -1,0 +1,6 @@
+.select {
+  padding: 10px;
+  border: none;
+  border-radius: var(--rounded);
+  background: var(--off-white);
+}

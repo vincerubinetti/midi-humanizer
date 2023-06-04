@@ -1,3 +1,4 @@
+/** download array buffer as file */
 export const downloadData = (
   data: Uint8Array,
   filename: string,

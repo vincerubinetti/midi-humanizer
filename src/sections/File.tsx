@@ -1,7 +1,9 @@
 import { ChangeEvent, useRef } from "react";
+import { useAtom } from "jotai";
 import { Midi } from "@tonejs/midi";
+import Button from "@/components/Button";
 import Group from "@/components/Group";
-import { useState } from "@/global/state";
+import { filename, humanized, incSeed, midi, options } from "@/state";
 import { downloadData } from "@/util/file";
 
 type FileEvent = ChangeEvent<HTMLInputElement> & {
@@ -11,29 +13,43 @@ type FileEvent = ChangeEvent<HTMLInputElement> & {
 const File = () => {
   const input = useRef<HTMLInputElement>(null);
 
-  const midi = useState((state) => state.midi);
-  const filename = useState((state) => state.filename);
-  const humanizedNotes = useState((state) => state.humanizedNotes);
+  const [, setMidi] = useAtom(midi);
+  const [getOptions] = useAtom(options);
+  const [getFilename, setFilename] = useAtom(filename);
+  const [getHumanized] = useAtom(humanized);
 
+  /** click actual file input on button click */
   const onClick = () => input?.current?.click();
 
+  /** upload file */
   const onLoad = async ({ target }: FileEvent) => {
+    /** get data from file upload */
     const file = target?.files[0];
     const data = (await file.arrayBuffer()) || "";
-    const midi = new Midi(data);
 
-    useState.setState({ midi, filename: file.name });
+    /** parse midi */
+    const midi = new Midi(data);
+    console.info(midi);
+
+    /** set state data */
+    setMidi(midi);
+    setFilename(file.name);
+
+    /** increment seeds */
+    if (getOptions.incSeed) incSeed();
+
+    /** reset file input so the same file could be re-selected */
     if (input.current) input.current.value = "";
   };
 
+  /** save file */
   const onSave = () => {
-    if (!midi) return;
-    midi.tracks[0].notes = humanizedNotes;
-    downloadData(midi.toArray(), filename, "audio/midi");
+    if (!getHumanized) return;
+    downloadData(getHumanized.toArray(), getFilename, "audio/midi");
   };
 
   return (
-    <Group label={filename ? `File (${filename})` : "File"}>
+    <Group label="File">
       <input
         ref={input}
         onChange={onLoad}
@@ -41,8 +57,8 @@ const File = () => {
         accept="audio/midi"
         style={{ display: "none" }}
       />
-      <button onClick={onClick}>Load</button>
-      <button onClick={onSave}>Save</button>
+      <Button onClick={onClick}>Load</Button>
+      <Button onClick={onSave}>Save</Button>
     </Group>
   );
 };

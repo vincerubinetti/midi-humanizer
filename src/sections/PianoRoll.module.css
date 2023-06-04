@@ -1,8 +1,20 @@
 .pianoRoll {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 75vh;
   background: var(--white);
   box-shadow: var(--shadow);
+}
+
+.topPanel {
+  width: 100%;
+  height: 75%;
+}
+
+.bottomPanel {
+  width: 100%;
+  height: 25%;
 }
 
 .pitchBlack {
@@ -37,7 +49,7 @@
   stroke: black;
 }
 
-.velocity {
+.velocities {
   fill: none;
   stroke: var(--primary);
   stroke-width: 3;
@@ -45,7 +57,7 @@
 
 .border {
   fill: none;
-  stroke: black;
+  stroke: var(--black);
 }
 
 .velocityBg {
@@ -54,5 +66,4 @@
 
 .drift {
   fill: var(--primary);
-  opacity: 0.5;
 }

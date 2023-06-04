@@ -2,7 +2,7 @@
   position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  align-items: flex-start;
+  align-items: center;
   gap: 10px 20px;
   width: 100%;
   margin: 0;

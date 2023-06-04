@@ -1,62 +1,51 @@
+import { useAtom } from "jotai";
 import Group from "@/components/Group";
 import Range from "@/components/Range";
-import { defaults, useState } from "@/global/state";
+import { defaults, duration } from "@/state";
 
-const Duration = () => (
-  <Group label="Note durations">
-    <Range
-      label="Rand."
-      min={0}
-      max={20}
-      step={1}
-      value={useState((state) => state.duration.randomness)}
-      defaultValue={defaults.duration.randomness}
-      onChange={(value) =>
-        useState.setState((state) => ({
-          duration: { ...state.duration, randomness: value },
-        }))
-      }
-    />
-    <Range
-      label="Seed"
-      min={0}
-      max={999}
-      step={1}
-      value={useState((state) => state.duration.seed)}
-      defaultValue={defaults.duration.seed}
-      onChange={(value) =>
-        useState.setState((state) => ({
-          duration: { ...state.duration, seed: value },
-        }))
-      }
-    />
-    <Range
-      label="Offset"
-      min={-20}
-      max={20}
-      step={1}
-      value={useState((state) => state.duration.offset)}
-      defaultValue={defaults.duration.offset}
-      onChange={(value) =>
-        useState.setState((state) => ({
-          duration: { ...state.duration, offset: value },
-        }))
-      }
-    />
-    <Range
-      label="Scale"
-      min={0}
-      max={2}
-      step={0.01}
-      value={useState((state) => state.duration.scale)}
-      defaultValue={defaults.duration.scale}
-      onChange={(value) =>
-        useState.setState((state) => ({
-          duration: { ...state.duration, scale: value },
-        }))
-      }
-    />
-  </Group>
-);
+const Duration = () => {
+  const [get, set] = useAtom(duration);
+
+  return (
+    <Group label="Note durations">
+      <Range
+        label="Rand."
+        min={0}
+        max={20}
+        step={1}
+        value={get.randomness}
+        defaultValue={defaults.duration.randomness}
+        onChange={(value) => set((state) => ({ ...state, randomness: value }))}
+      />
+      <Range
+        label="Seed"
+        min={0}
+        max={999}
+        step={1}
+        value={get.seed}
+        defaultValue={defaults.duration.seed}
+        onChange={(value) => set((state) => ({ ...state, seed: value }))}
+      />
+      <Range
+        label="Offset"
+        min={-20}
+        max={20}
+        step={1}
+        value={get.offset}
+        defaultValue={defaults.duration.offset}
+        onChange={(value) => set((state) => ({ ...state, offset: value }))}
+      />
+      <Range
+        label="Scale"
+        min={0}
+        max={2}
+        step={0.01}
+        value={get.scale}
+        defaultValue={defaults.duration.scale}
+        onChange={(value) => set((state) => ({ ...state, scale: value }))}
+      />
+    </Group>
+  );
+};
 
 export default Duration;

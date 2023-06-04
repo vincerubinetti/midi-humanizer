@@ -7,6 +7,7 @@
   --light-gray: #cfd8dc;
   --gray: #90a4ae;
   --dark-gray: #263238;
+  --black: #000000;
 
   --shadow: 0 0 10px #0002;
   --rounded: 5px;
@@ -39,15 +40,23 @@ main {
   padding: 40px;
 }
 
-header {
+header,
+footer {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   gap: 10px 40px;
   padding: 40px;
-  padding-bottom: 0;
   text-align: center;
+}
+
+header {
+  padding-bottom: 0;
+}
+
+footer {
+  padding-top: 0;
 }
 
 h1 {
@@ -59,6 +68,7 @@ h1 {
 section {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  align-items: flex-start;
   gap: 40px;
   width: 100%;
 }
@@ -69,23 +79,9 @@ section {
   }
 }
 
-button {
-  padding: 10px;
-  border: none;
-  border-radius: var(--rounded);
-  background: var(--off-white);
-  color: var(--dark-gray);
-  font: inherit;
-  cursor: pointer;
-  transition: background var(--fast), color var(--fast);
-}
-
-button:hover {
-  background: var(--primary);
-  color: var(--white);
-}
-
-input {
+button,
+input,
+select {
   font: inherit;
   cursor: pointer;
 }
@@ -97,4 +93,29 @@ a {
 
 a:hover {
   color: var(--dark-gray);
+}
+
+.control {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.control-label {
+  min-width: 80px;
+  padding-left: 10px;
+  font-weight: 500;
+}
+
+.control-primary {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  width: 0;
+  min-height: 40px;
+  margin: 0;
+}
+
+.control-secondary {
+  width: 60px;
 }

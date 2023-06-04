@@ -19,9 +19,9 @@ const Range = ({
   defaultValue,
   onChange,
 }: Props) => (
-  <label className={classes.container}>
+  <label className="control">
     <span
-      className={classes.label}
+      className={"control-label"}
       onDoubleClick={() => onChange(defaultValue)}
     >
       {label}
@@ -33,7 +33,7 @@ const Range = ({
       step={step}
       value={value}
       onChange={(event) => onChange(Number(event.target.value))}
-      className={classes.input}
+      className={classes.input + " control-primary"}
     />
     <input
       type="number"
@@ -42,7 +42,7 @@ const Range = ({
       step={step}
       value={value}
       onChange={(event) => onChange(Number(event.target.value))}
-      className={classes.value}
+      className={classes.value + " control-secondary"}
     />
   </label>
 );

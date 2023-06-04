@@ -211,11 +211,10 @@ export const incSeed = () => {
 };
 
 /** for testing */
-Midi.fromUrl("test.mid").then((parsed) => store.set(midi, parsed));
+// Midi.fromUrl("test.mid").then((parsed) => store.set(midi, parsed));
 
 /** midi preview */
 export const preview = () => {
-  console.log("hi");
   const now = Tone.now() + 0.5;
   /** schedule notes */
   for (const track of store.get(midi)?.tracks || []) {

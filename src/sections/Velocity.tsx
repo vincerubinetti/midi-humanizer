@@ -10,6 +10,7 @@ const Velocity = () => {
     <Group label="Note velocities">
       <Range
         label="Rand."
+        tooltip="Amount of randomness. Max amount to shift note velocities up/down, in range of 0-1."
         min={0}
         max={1}
         step={0.01}
@@ -19,6 +20,7 @@ const Velocity = () => {
       />
       <Range
         label="Seed"
+        tooltip="Unique character of velocity randomness."
         min={0}
         max={999}
         step={1}
@@ -27,16 +29,18 @@ const Velocity = () => {
         onChange={(value) => set((state) => ({ ...state, seed: value }))}
       />
       <Range
-        label="Offset"
+        label="Shift"
+        tooltip="How much to shift all note velocities up/down, in range of 0-1."
         min={-1}
         max={1}
         step={0.01}
-        value={get.offset}
-        defaultValue={defaults.velocity.offset}
-        onChange={(value) => set((state) => ({ ...state, offset: value }))}
+        value={get.shift}
+        defaultValue={defaults.velocity.shift}
+        onChange={(value) => set((state) => ({ ...state, shift: value }))}
       />
       <Range
         label="Scale"
+        tooltip="How much to scale all note velocities, as multiplier."
         min={0}
         max={2}
         step={0.01}

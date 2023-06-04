@@ -1,16 +1,14 @@
-import { ChangeEvent, useRef } from "react";
+import { DragEventHandler, useEffect, useRef, useState } from "react";
 import { useAtom } from "jotai";
 import { Midi } from "@tonejs/midi";
 import Button from "@/components/Button";
 import Group from "@/components/Group";
 import { filename, humanized, incSeed, midi, options } from "@/state";
 import { downloadData } from "@/util/file";
-
-type FileEvent = ChangeEvent<HTMLInputElement> & {
-  target: EventTarget & { files: FileList };
-};
+import classes from "./File.module.css";
 
 const File = () => {
+  const [dragging, setDragging] = useState(false);
   const input = useRef<HTMLInputElement>(null);
 
   const [, setMidi] = useAtom(midi);
@@ -22,9 +20,10 @@ const File = () => {
   const onClick = () => input?.current?.click();
 
   /** upload file */
-  const onLoad = async ({ target }: FileEvent) => {
+  const onLoad = async (file: File) => {
+    if (file.type !== "audio/midi") return;
+
     /** get data from file upload */
-    const file = target?.files[0];
     const data = (await file.arrayBuffer()) || "";
 
     /** parse midi */
@@ -48,17 +47,54 @@ const File = () => {
     downloadData(getHumanized.toArray(), getFilename, "audio/midi");
   };
 
+  /** on button drag file over, set drag flag on */
+  const onDragEnter = () => setDragging(true);
+
+  /** add drag enter listener to window, because overlay not interactable until dragging started */
+  useEffect(() => {
+    window.addEventListener("dragenter", onDragEnter);
+    () => window.removeEventListener("dragenter", onDragEnter);
+  });
+
+  /** on button drag file off, set drag flag off */
+  const onDragLeave = () => setDragging(false);
+
+  /** on button drag file */
+  const onDragOver: DragEventHandler<HTMLDivElement> = (event) =>
+    event.preventDefault();
+
+  /** on button file drop */
+  const onDrop: DragEventHandler<HTMLDivElement> = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setDragging(false);
+    const file = event.dataTransfer.files[0];
+    if (file) onLoad(file as unknown as File);
+  };
+
   return (
     <Group label="File">
       <input
         ref={input}
-        onChange={onLoad}
+        onChange={(event) => {
+          const file = event.target?.files?.[0];
+          if (file) onLoad(file);
+        }}
         type="file"
         accept="audio/midi"
         style={{ display: "none" }}
       />
       <Button onClick={onClick}>Load</Button>
       <Button onClick={onSave}>Save</Button>
+      <div
+        className={classes.overlay}
+        onDragLeave={onDragLeave}
+        onDragOver={onDragOver}
+        onDrop={onDrop}
+        data-dragging={dragging}
+      >
+        Drop MIDI File
+      </div>
     </Group>
   );
 };

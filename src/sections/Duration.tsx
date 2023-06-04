@@ -10,6 +10,7 @@ const Duration = () => {
     <Group label="Note durations">
       <Range
         label="Rand."
+        tooltip="Amount of randomness. Max amount to shift note durations left/right, in ticks."
         min={0}
         max={20}
         step={1}
@@ -19,6 +20,7 @@ const Duration = () => {
       />
       <Range
         label="Seed"
+        tooltip="Unique character of duration randomness."
         min={0}
         max={999}
         step={1}
@@ -27,16 +29,18 @@ const Duration = () => {
         onChange={(value) => set((state) => ({ ...state, seed: value }))}
       />
       <Range
-        label="Offset"
+        label="Shift"
+        tooltip="How much to shift all note durations left/right, in ticks."
         min={-20}
         max={20}
         step={1}
-        value={get.offset}
-        defaultValue={defaults.duration.offset}
-        onChange={(value) => set((state) => ({ ...state, offset: value }))}
+        value={get.shift}
+        defaultValue={defaults.duration.shift}
+        onChange={(value) => set((state) => ({ ...state, shift: value }))}
       />
       <Range
         label="Scale"
+        tooltip="How much to scale all note starts, as multiplier."
         min={0}
         max={2}
         step={0.01}

@@ -4,7 +4,6 @@
   border-radius: var(--rounded);
   background: var(--off-white);
   color: var(--dark-gray);
-  font-weight: 500;
   transition: background var(--fast), color var(--fast);
 }
 

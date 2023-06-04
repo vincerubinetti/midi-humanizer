@@ -10,6 +10,7 @@ const Drift = () => {
     <Group label="Note start drift">
       <Range
         label="Amnt."
+        tooltip="Amount that drift affects note starts in ticks."
         min={0}
         max={20}
         step={1}
@@ -19,6 +20,7 @@ const Drift = () => {
       />
       <Range
         label="Seed"
+        tooltip="Unique character of drift randomness."
         min={0}
         max={999}
         step={1}
@@ -28,6 +30,7 @@ const Drift = () => {
       />
       <Range
         label="Step"
+        tooltip="Start drifting toward new value every this number of ticks. Lower = faster, higher = slower."
         min={2 ** 2}
         max={2 ** 11}
         step={1}

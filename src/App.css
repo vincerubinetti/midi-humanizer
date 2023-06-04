@@ -23,7 +23,6 @@ body {
   min-height: 100vh;
   margin: 0;
   font-size: 14pt;
-  font-weight: 300;
   background: var(--white);
 }
 
@@ -62,21 +61,15 @@ footer {
 h1 {
   display: inline-block;
   margin: 0;
-  font-weight: 500;
+  font: inherit;
+  font-size: 2rem;
 }
 
 section {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  align-items: flex-start;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 40px;
   width: 100%;
-}
-
-@media (max-width: 800px) {
-  section {
-    grid-template-columns: repeat(1, 1fr);
-  }
 }
 
 button,
@@ -104,18 +97,31 @@ a:hover {
 .control-label {
   min-width: 80px;
   padding-left: 10px;
-  font-weight: 500;
 }
 
 .control-primary {
   flex-grow: 1;
-  display: flex;
-  align-items: center;
   width: 0;
-  min-height: 40px;
   margin: 0;
 }
 
 .control-secondary {
   width: 60px;
+}
+
+.tippy-box {
+  padding: 10px 15px;
+  border-radius: var(--rounded);
+  background: var(--dark-gray);
+  font-size: 1rem;
+  box-shadow: 0 0 10px var(--off-black);
+}
+
+.tippy-content {
+  padding: 0;
+}
+
+.tippy-arrow {
+  color: var(--dark-gray);
+  z-index: 99;
 }

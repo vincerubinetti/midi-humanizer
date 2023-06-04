@@ -6,7 +6,7 @@ type Props = {
 const Detail = ({ label, value }: Props) => (
   <label className="control">
     <span className="control-label">{label}</span>
-    <span className="control-primary">{value || "-"}</span>
+    <span>{value || "-"}</span>
   </label>
 );
 

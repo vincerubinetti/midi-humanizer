@@ -1,0 +1,19 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--white);
+  background: #000c;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 99;
+  font-size: 1.2rem;
+  transition: opacity var(--fast);
+}
+
+.overlay[data-dragging="true"] {
+  opacity: 1;
+  pointer-events: all;
+}

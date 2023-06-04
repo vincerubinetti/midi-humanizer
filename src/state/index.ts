@@ -8,10 +8,10 @@ import { random } from "@/util/math";
 
 /** defaults for reset-able fields */
 export const defaults = {
-  start: { randomness: 0, seed: 0, offset: 0 },
+  start: { randomness: 0, seed: 0, shift: 0 },
   drift: { amount: 0, seed: 0, step: 2 ** 9 },
-  duration: { randomness: 0, seed: 0, offset: 0, scale: 1 },
-  velocity: { randomness: 0, seed: 0, offset: 0, scale: 1 },
+  duration: { randomness: 0, seed: 0, shift: 0, scale: 1 },
+  velocity: { randomness: 0, seed: 0, shift: 0, scale: 1 },
   options: { grid: 4, incSeed: true },
 };
 
@@ -131,7 +131,7 @@ export const humanized = atom((get) => {
         /** random drift */
         (get(driftCurve)[note.ticks] || 0) * get(drift).amount +
         /** transform */
-        get(start).offset;
+        get(start).shift;
 
       /** duration */
       note.durationTicks +=
@@ -139,7 +139,7 @@ export const humanized = atom((get) => {
         (random("duration" + index + get(duration).seed) *
           get(duration).randomness +
           /** transform */
-          get(duration).offset) *
+          get(duration).shift) *
         get(duration).scale;
 
       /** randomize velocity */
@@ -148,7 +148,7 @@ export const humanized = atom((get) => {
         (random("velocity" + index + get(velocity).seed) *
           get(velocity).randomness +
           /** transform */
-          get(velocity).offset) *
+          get(velocity).shift) *
         get(velocity).scale;
 
       /** limit start */

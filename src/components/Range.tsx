@@ -2,6 +2,7 @@ import classes from "./Range.module.css";
 
 type Props = {
   label: string;
+  tooltip?: string;
   min: number;
   max: number;
   step: number;
@@ -12,6 +13,7 @@ type Props = {
 
 const Range = ({
   label,
+  tooltip,
   min,
   max,
   step,
@@ -23,6 +25,7 @@ const Range = ({
     <span
       className={"control-label"}
       onDoubleClick={() => onChange(defaultValue)}
+      data-tooltip={tooltip + " Double-click to reset."}
     >
       {label}
     </span>

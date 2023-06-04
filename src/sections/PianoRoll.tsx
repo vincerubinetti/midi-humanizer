@@ -50,7 +50,12 @@ const PianoRoll = () => {
         [getPitchGuides[0].width + padding, getBeatGuides[0].y2 + padding],
       ])
       /** limit scale */
-      .scaleExtent([0.05, 20]);
+      .scaleExtent([0.05, 20])
+      /** require modifier key to scroll with mouse wheel */
+      .filter((event) => {
+        if (event.type === "wheel" && !event.altKey) return false;
+        return true;
+      });
 
     /** fit to contents */
     const fit = () => {
@@ -92,8 +97,8 @@ const PianoRoll = () => {
     getBeatGuides,
     getPitchGuides,
     topPanel.ref,
-    topPanel.height,
     topPanel.width,
+    topPanel.height,
   ]);
 
   /** make svg path from drift curve */
@@ -116,7 +121,10 @@ const PianoRoll = () => {
     : [];
 
   return (
-    <div className={classes.pianoRoll}>
+    <div
+      className={classes.pianoRoll}
+      data-tooltip="Piano roll. Click and drag to pan. Scroll + alt/option to zoom. Double click to fit."
+    >
       <svg
         ref={topPanel.ref}
         viewBox={[0, 0, topPanel.width || 0, topPanel.height || 0].join(" ")}

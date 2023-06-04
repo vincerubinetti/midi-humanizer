@@ -16,7 +16,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "seedrandom": "^3.0.5",
-    "tippy.js": "^6.3.7"
+    "tippy.js": "^6.3.7",
+    "tone": "^14.7.77"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.0.0-alpha.7",

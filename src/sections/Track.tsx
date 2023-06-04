@@ -3,7 +3,7 @@ import Group from "@/components/Group";
 import Select from "@/components/Select";
 import { midi, track } from "@/state";
 
-const Meta = () => {
+const Info = () => {
   const [getMidi] = useAtom(midi);
   const [getTrack, setTrack] = useAtom(track);
 
@@ -30,4 +30,4 @@ const Meta = () => {
   );
 };
 
-export default Meta;
+export default Info;

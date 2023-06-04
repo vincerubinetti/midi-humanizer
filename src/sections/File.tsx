@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { Midi } from "@tonejs/midi";
 import Button from "@/components/Button";
 import Group from "@/components/Group";
-import { filename, humanized, incSeed, midi, options } from "@/state";
+import { filename, humanized, incSeed, midi, options, preview } from "@/state";
 import { downloadData } from "@/util/file";
 import classes from "./File.module.css";
 
@@ -86,6 +86,7 @@ const File = () => {
       />
       <Button onClick={onClick}>Load</Button>
       <Button onClick={onSave}>Save</Button>
+      <Button onClick={preview}>Preview</Button>
       <div
         className={classes.overlay}
         onDragLeave={onDragLeave}

@@ -3,7 +3,7 @@ import Duration from "@/sections/Duration";
 import File from "@/sections/File";
 import Footer from "@/sections/Footer";
 import Header from "@/sections/Header";
-import Meta from "@/sections/Meta";
+import Info from "@/sections/Info";
 import Options from "@/sections/Options";
 import PianoRoll from "@/sections/PianoRoll";
 import Start from "@/sections/Start";
@@ -18,7 +18,7 @@ const App = () => (
     <main>
       <File />
       <section>
-        <Meta />
+        <Info />
         <Track />
       </section>
       <PianoRoll />

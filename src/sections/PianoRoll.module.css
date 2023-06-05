@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 75vh;
+  height: min(400px, 75vh);
   background: var(--white);
   box-shadow: var(--shadow);
 }

@@ -10,7 +10,7 @@ const Drift = () => {
     <Group label="Note start drift">
       <Range
         label="Amnt."
-        tooltip="Amount that drift affects note starts in ticks."
+        tooltip="Amount that drift affects note starts, in ticks."
         min={0}
         max={20}
         step={1}

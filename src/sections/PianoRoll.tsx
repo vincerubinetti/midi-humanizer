@@ -31,8 +31,8 @@ const PianoRoll = () => {
   const [getHumanized] = useAtom(humanized);
 
   useEffect(() => {
-    /** padding around zoom fit and extent */
-    const padding = noteHeight * 10;
+    /** padding around pan extent */
+    const padding = noteHeight * 20;
 
     /** create zoom handler */
     const zoom = d3
@@ -66,6 +66,9 @@ const PianoRoll = () => {
         !topPanelView.current
       )
         return;
+
+      /** padding around fit */
+      const padding = noteHeight * 0;
 
       /** get contents of top panel view */
       const bbox = topPanelView.current.getBBox();

@@ -22,7 +22,7 @@ const Options = () => {
       />
       <Checkbox
         label="Inc. Seed"
-        tooltip="Whether to automatically increment each seed parameter when a new file is loaded. Useful when working on lots of similar files and don't want them to have the same randomness."
+        tooltip="Whether to automatically increment each seed parameter when a new file is loaded. Useful when working on lots of similar files and you don't want them to have the same randomness."
         value={get.incSeed}
         onChange={(value) => set((state) => ({ ...state, incSeed: value }))}
       />

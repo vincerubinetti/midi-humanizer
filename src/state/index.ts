@@ -2,7 +2,6 @@ import * as d3 from "d3";
 import { atom, getDefaultStore } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { clamp, range } from "lodash";
-import * as Tone from "tone";
 import { Midi } from "@tonejs/midi";
 import { noteHeight } from "@/sections/PianoRoll";
 import { random } from "@/util/math";
@@ -212,42 +211,3 @@ export const incSeed = () => {
 
 /** for testing */
 // Midi.fromUrl("test.mid").then((parsed) => store.set(midi, parsed));
-
-/** midi preview */
-export const preview = () => {
-  const now = Tone.now() + 0.5;
-  /** schedule notes */
-  for (const track of store.get(midi)?.tracks || []) {
-    const synth = track.instrument.percussion
-      ? /** drum synth to play unpitched notes */
-        new Tone.MembraneSynth()
-          .set({
-            envelope: {
-              attack: 0.01,
-              decay: 0.1,
-              sustain: 0,
-              release: 1,
-            },
-          })
-          .toDestination()
-      : /** tone synth to play pitched notes */
-        new Tone.PolySynth()
-          .set({
-            envelope: {
-              attack: 0.01,
-              decay: 0,
-              sustain: 1,
-              release: 0.01,
-            },
-          })
-          .toDestination();
-    for (const note of track.notes) {
-      synth.triggerAttackRelease(
-        note.name,
-        note.duration,
-        now + note.time,
-        note.velocity
-      );
-    }
-  }
-};

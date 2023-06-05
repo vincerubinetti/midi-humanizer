@@ -108,7 +108,7 @@ const PianoRoll = () => {
         .concat(getDriftCurve)
         .concat(0)
         .map((value, index) =>
-          [index === 0 ? "M" : "L", index, -(value * 20).toFixed(1)].join(" ")
+          [index === 0 ? "M" : "L", index, -(value * 40).toFixed(1)].join(" ")
         )
         .join(" "),
     [getDriftCurve]
@@ -258,9 +258,11 @@ const PianoRoll = () => {
           {/* drift shape */}
           <path
             d={driftPath}
-            transform={`translate(0, ${bottomPanel.height / 2})`}
+            transform={`translate(0, ${bottomPanel.height / 2}) scale(1, ${
+              getDrift.amount / (getDrift.amount + 5)
+            })`}
             className={classes.drift}
-            opacity={getDrift.amount / (getDrift.amount + 5)}
+            opacity={0.75}
           />
         </g>
       </svg>

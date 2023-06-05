@@ -3,7 +3,7 @@ import { useAtom } from "jotai";
 import { Midi } from "@tonejs/midi";
 import Button from "@/components/Button";
 import Group from "@/components/Group";
-import { filename, humanized, incSeed, midi, options, preview } from "@/state";
+import { filename, humanized, incSeed, midi, options } from "@/state";
 import { downloadData } from "@/util/file";
 import classes from "./File.module.css";
 
@@ -21,21 +21,23 @@ const File = () => {
 
   /** upload file */
   const onLoad = async (file: File) => {
-    if (file.type !== "audio/midi") return;
+    try {
+      /** get data from file upload */
+      const data = (await file.arrayBuffer()) || "";
 
-    /** get data from file upload */
-    const data = (await file.arrayBuffer()) || "";
+      /** parse midi */
+      const midi = new Midi(data);
+      console.info(midi);
 
-    /** parse midi */
-    const midi = new Midi(data);
-    console.info(midi);
+      /** set state data */
+      setMidi(midi);
+      setFilename(file.name);
 
-    /** set state data */
-    setMidi(midi);
-    setFilename(file.name);
-
-    /** increment seeds */
-    if (getOptions.incSeed) incSeed();
+      /** increment seeds */
+      if (getOptions.incSeed) incSeed();
+    } catch (error) {
+      console.error(error);
+    }
 
     /** reset file input so the same file could be re-selected */
     if (input.current) input.current.value = "";
@@ -84,9 +86,13 @@ const File = () => {
         accept="audio/midi"
         style={{ display: "none" }}
       />
-      <Button onClick={onClick}>Load</Button>
+      <Button
+        onClick={onClick}
+        data-tooltip="Load MIDI file. Or drag and drop file onto window."
+      >
+        Load
+      </Button>
       <Button onClick={onSave}>Save</Button>
-      <Button onClick={preview}>Preview</Button>
       <div
         className={classes.overlay}
         onDragLeave={onDragLeave}

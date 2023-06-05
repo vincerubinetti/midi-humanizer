@@ -17,5 +17,5 @@
 .group legend {
   position: absolute;
   bottom: calc(100% + 10px);
-  color: var(--dark-gray);
+  color: var(--mid-gray);
 }

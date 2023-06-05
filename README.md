@@ -4,6 +4,8 @@ A tool to randomize note starts, durations, tempo drift, and velocities in a MID
 
 [⭐️ Open the App ⭐️](https://vincerubinetti.github.io/midi-humanizer/)
 
+<img width="300" src="https://raw.githubusercontent.com/vincerubinetti/midi-humanizer/main/public/screenshot.jpg?raw=true" />
+
 When writing music in a [DAW](https://en.wikipedia.org/wiki/Digital_audio_workstation), you often sequence in notes perfectly snapped to the grid.
 Sometimes you might want to add some randomness to make it sound more like a human played them.
 Unfortunately, many DAWs provide little or no controls to do this automatically.

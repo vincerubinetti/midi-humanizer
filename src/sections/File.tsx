@@ -1,5 +1,6 @@
 import { DragEventHandler, useEffect, useRef, useState } from "react";
 import { useAtom } from "jotai";
+import { startCase } from "lodash";
 import { Midi } from "@tonejs/midi";
 import Button from "@/components/Button";
 import Group from "@/components/Group";
@@ -30,6 +31,7 @@ const File = () => {
       console.info(midi);
 
       /** set state data */
+      if (!midi.name) midi.name = startCase(file.name.replace(/\.midi?$/, ""));
       setMidi(midi);
       setFilename(file.name);
 

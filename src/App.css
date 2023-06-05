@@ -6,6 +6,7 @@
   --off-white: #eceff1;
   --light-gray: #cfd8dc;
   --gray: #90a4ae;
+  --mid-gray: #607d8b;
   --dark-gray: #263238;
   --black: #000000;
 
@@ -59,7 +60,9 @@ footer {
 }
 
 h1 {
-  display: inline-block;
+  display: inline-flex;
+  gap: 20px;
+  align-items: center;
   margin: 0;
   font: inherit;
   font-size: 2rem;
@@ -68,6 +71,7 @@ h1 {
 section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  align-items: flex-start;
   gap: 40px;
   width: 100%;
 }
@@ -97,6 +101,7 @@ a:hover {
 .control-label {
   min-width: 80px;
   padding-left: 10px;
+  color: var(--mid-gray);
 }
 
 .control-primary {

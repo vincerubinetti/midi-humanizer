@@ -20,15 +20,15 @@ export const midi = atom<Midi | null>(null);
 export const track = atom(0);
 export const filename = atom("");
 export const pitchRange = atom((get) => {
+  /** get current track */
+  const currentTrack = get(midi)?.tracks[get(track)];
+
+  /** find min/max pitches */
   let min;
   let max;
-
-  /** find min/max pitches of all tracks */
-  for (const track of get(midi)?.tracks || []) {
-    for (const note of track.notes) {
-      if (!min || note.midi < min) min = note.midi;
-      if (!max || note.midi > max) max = note.midi;
-    }
+  for (const note of currentTrack?.notes || []) {
+    if (!min || note.midi < min) min = note.midi;
+    if (!max || note.midi > max) max = note.midi;
   }
 
   /** extend one octave in each direction */
@@ -125,7 +125,8 @@ export const humanized = atom((get) => {
     /** go through each node */
     for (const [index, note] of Object.entries(track.notes)) {
       /** start time */
-      note.ticks +=
+      note.ticks =
+        note.ticks +
         /** random spread */
         random("start" + index + get(start).seed) * get(start).randomness +
         /** random drift */
@@ -134,19 +135,21 @@ export const humanized = atom((get) => {
         get(start).shift;
 
       /** duration */
-      note.durationTicks +=
-        /** random spread */
-        (random("duration" + index + get(duration).seed) *
-          get(duration).randomness +
+      note.durationTicks =
+        (note.durationTicks +
+          /** random spread */
+          random("duration" + index + get(duration).seed) *
+            get(duration).randomness +
           /** transform */
           get(duration).shift) *
         get(duration).scale;
 
       /** randomize velocity */
-      note.velocity +=
+      note.velocity =
         /** random spread */
-        (random("velocity" + index + get(velocity).seed) *
-          get(velocity).randomness +
+        (note.velocity +
+          random("velocity" + index + get(velocity).seed) *
+            get(velocity).randomness +
           /** transform */
           get(velocity).shift) *
         get(velocity).scale;
@@ -209,5 +212,9 @@ export const incSeed = () => {
   store.set(velocity, (value) => ({ ...value, seed: value.seed + 1 }));
 };
 
-/** for testing */
-// Midi.fromUrl("test.mid").then((parsed) => store.set(midi, parsed));
+/** load sample */
+Midi.fromUrl("sample.mid").then((parsed) => {
+  console.info(parsed);
+  store.set(filename, "sample.mid");
+  store.set(midi, parsed);
+});

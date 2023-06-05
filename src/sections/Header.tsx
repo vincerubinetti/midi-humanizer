@@ -1,6 +1,9 @@
 const Header = () => (
   <header>
-    <h1>MIDI Humanizer</h1>
+    <h1>
+      <img src="logo.svg" style={{ height: "1em" }} alt="" />
+      MIDI Humanizer
+    </h1>
   </header>
 );
 

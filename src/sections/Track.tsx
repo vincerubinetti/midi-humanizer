@@ -10,18 +10,25 @@ const Info = () => {
   if (!getMidi) return <></>;
 
   /** list of instruments */
-  const instruments =
-    getMidi.tracks.map((track) => {
-      const { name, family, percussion } = track.instrument;
-      return [name, family, percussion ? "percussion" : ""]
+  const instruments = getMidi.tracks.map(
+    (track, index) =>
+      index +
+      1 +
+      ". " +
+      [
+        track.name,
+        track.instrument.name,
+        track.instrument.family,
+        track.instrument.percussion ? "percussion" : "",
+      ]
         .filter(Boolean)
-        .join(" | ");
-    }) || [];
+        .join(" | ")
+  );
 
   return (
     <Group label="Track">
       <Select
-        label="Select"
+        label="View"
         options={instruments}
         value={getTrack}
         onChange={setTrack}

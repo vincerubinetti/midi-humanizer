@@ -10,12 +10,14 @@ type Props<Option> = {
 const Select = <Option extends string>({
   label,
   options,
+  value,
   onChange,
 }: Props<Option>) => (
   <label className="control">
     <span className="control-label">{label}</span>
     <select
       className={classes.select + " control-primary"}
+      value={options[value]}
       onChange={(event) => onChange(event.target.selectedIndex)}
     >
       {options.map((option, index) => (

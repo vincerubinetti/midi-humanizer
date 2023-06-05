@@ -12,7 +12,7 @@
 
   --shadow: 0 0 10px #0002;
   --rounded: 5px;
-  --fast: 0.25s ease;
+  --fast: 0.15s ease;
 }
 
 * {

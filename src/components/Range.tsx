@@ -40,8 +40,6 @@ const Range = ({
     />
     <input
       type="number"
-      min={min}
-      max={max}
       step={step}
       value={value}
       onChange={(event) => onChange(Number(event.target.value))}

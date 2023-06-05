@@ -17,6 +17,11 @@
   height: 25%;
 }
 
+.border {
+  fill: none;
+  stroke: var(--black);
+}
+
 .pitchBlack {
   fill: var(--off-white);
   clip-path: url(#shape);
@@ -39,29 +44,33 @@
   stroke: var(--light-gray);
 }
 
-.humanizedNotes {
+.humanizedNote {
   fill: var(--primary);
   stroke: var(--secondary);
 }
 
-.originalNotes {
+.humanizedNote {
+  transition: opacity var(--fast);
+}
+
+.originalNote {
   fill: none;
-  stroke: black;
+  stroke: var(--dark-gray);
+  transition: opacity var(--fast);
+}
+
+svg:has(.humanizedNote:hover) .humanizedNote:not(:hover) {
+  opacity: 0.25;
+}
+
+svg:hover .originalNote {
+  opacity: 0;
 }
 
 .velocities {
   fill: none;
   stroke: var(--primary);
   stroke-width: 3;
-}
-
-.border {
-  fill: none;
-  stroke: var(--black);
-}
-
-.velocityBg {
-  fill: var(--white);
 }
 
 .drift {

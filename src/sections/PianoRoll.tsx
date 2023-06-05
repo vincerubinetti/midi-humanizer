@@ -30,6 +30,11 @@ const PianoRoll = () => {
   const [getBeatGuides] = useAtom(beatGuides);
   const [getHumanized] = useAtom(humanized);
 
+  /** dimensions of piano roll in svg coordinates */
+  const beatY1 = getBeatGuides[0].y1;
+  const beatY2 = getBeatGuides[0].y2;
+  const pitchWidth = getPitchGuides[0].width;
+
   useEffect(() => {
     /** padding around pan extent */
     const padding = noteHeight * 20;
@@ -46,8 +51,8 @@ const PianoRoll = () => {
       })
       /** limit translate */
       .translateExtent([
-        [0 - padding, getBeatGuides[0].y1 - padding],
-        [getPitchGuides[0].width + padding, getBeatGuides[0].y2 + padding],
+        [0 - padding, beatY1 - padding],
+        [pitchWidth + padding, beatY2 + padding],
       ])
       /** limit scale */
       .scaleExtent([0.05, 20])
@@ -83,6 +88,7 @@ const PianoRoll = () => {
       const translateX = topPanel.width / 2 - scale * (x + width / 2);
       const translateY = topPanel.height / 2 - scale * (y + height / 2);
 
+      /** apply transform */
       d3.select(topPanel.ref.current).call(
         zoom.transform,
         d3.zoomIdentity.translate(translateX, translateY).scale(scale)
@@ -97,8 +103,9 @@ const PianoRoll = () => {
       d3.select(topPanel.ref.current).call(zoom).on("dblclick.zoom", fit);
   }, [
     getMidi,
-    getBeatGuides,
-    getPitchGuides,
+    beatY1,
+    beatY2,
+    pitchWidth,
     topPanel.ref,
     topPanel.width,
     topPanel.height,
@@ -165,7 +172,7 @@ const PianoRoll = () => {
                     ? classes.beatMajor
                     : beat.type === "minor"
                     ? classes.beatMinor
-                    : classes.beatGuidesub
+                    : classes.beatSub
                 }
               />
             ))}
@@ -189,6 +196,7 @@ const PianoRoll = () => {
                 y={(127 - note.midi) * noteHeight}
                 width={note.durationTicks}
                 height={noteHeight}
+                className={classes.humanizedNote}
               />
             ))}
           </g>
@@ -202,6 +210,7 @@ const PianoRoll = () => {
                 y={(127 - note.midi) * noteHeight}
                 width={note.durationTicks}
                 height={noteHeight}
+                className={classes.originalNote}
               />
             ))}
           </g>
@@ -230,7 +239,7 @@ const PianoRoll = () => {
                     ? classes.beatMajor
                     : beat.type === "minor"
                     ? classes.beatMinor
-                    : classes.beatGuidesub
+                    : classes.beatSub
                 }
               />
             ))}
@@ -241,7 +250,7 @@ const PianoRoll = () => {
             x={0}
             y={0}
             width={getMidi?.durationTicks || 0}
-            height={bottomPanel.height}
+            height={(bottomPanel.height || 1) - 1}
             className={classes.border}
           />
 
@@ -262,7 +271,7 @@ const PianoRoll = () => {
           <path
             d={driftPath}
             transform={`translate(0, ${bottomPanel.height / 2}) scale(1, ${
-              getDrift.amount / (getDrift.amount + 5)
+              getDrift.amount / (Math.abs(getDrift.amount) + 5)
             })`}
             className={classes.drift}
             opacity={0.75}

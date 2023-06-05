@@ -22,7 +22,7 @@ const Drift = () => {
         label="Seed"
         tooltip="Unique character of drift randomness."
         min={0}
-        max={999}
+        max={99}
         step={1}
         value={get.seed}
         defaultValue={defaults.drift.seed}
@@ -32,7 +32,7 @@ const Drift = () => {
         label="Step"
         tooltip="Start drifting toward new value every this number of ticks. Lower = faster, higher = slower."
         min={2 ** 2}
-        max={2 ** 11}
+        max={2 ** 10}
         step={1}
         value={get.step}
         defaultValue={defaults.drift.step}

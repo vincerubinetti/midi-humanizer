@@ -22,7 +22,7 @@ const Duration = () => {
         label="Seed"
         tooltip="Unique character of duration randomness."
         min={0}
-        max={999}
+        max={99}
         step={1}
         value={get.seed}
         defaultValue={defaults.duration.seed}

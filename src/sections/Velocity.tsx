@@ -12,7 +12,7 @@ const Velocity = () => {
         label="Rand."
         tooltip="Amount of randomness. Max amount to shift note velocities up/down, in range of 0-1."
         min={0}
-        max={1}
+        max={0.5}
         step={0.01}
         value={get.randomness}
         defaultValue={defaults.velocity.randomness}

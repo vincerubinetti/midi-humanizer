@@ -12,7 +12,7 @@ const Drift = () => {
         label="Amnt."
         tooltip="Amount that drift affects note starts, in ticks."
         min={0}
-        max={20}
+        max={10}
         step={1}
         value={get.amount}
         defaultValue={defaults.drift.amount}
@@ -31,8 +31,8 @@ const Drift = () => {
       <Range
         label="Step"
         tooltip="Start drifting toward new value every this number of ticks. Lower = faster, higher = slower."
-        min={2 ** 2}
-        max={2 ** 10}
+        min={96 * 0.5}
+        max={96 * 10}
         step={1}
         value={get.step}
         defaultValue={defaults.drift.step}

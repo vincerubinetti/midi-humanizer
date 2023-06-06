@@ -25,7 +25,7 @@ const Range = ({
     <span
       className={"control-label"}
       onDoubleClick={() => onChange(defaultValue)}
-      data-tooltip={tooltip + " Double-click to reset."}
+      data-tooltip={tooltip + " Double-click to reset. Type to set any value."}
     >
       {label}
     </span>

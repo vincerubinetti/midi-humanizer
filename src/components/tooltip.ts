@@ -8,7 +8,13 @@ const options: Partial<Props> = {
   allowHTML: true,
   // interactive: true,
   appendTo: document.body,
-  aria: { content: "describedby" },
+  aria: { content: "auto" },
+  onCreate: (instance: Instance) => {
+    instance?.reference.setAttribute(
+      "aria-label",
+      instance?.reference.getAttribute("data-tooltip") || ""
+    );
+  },
   onShow: (instance: Instance) => {
     /** don't show if no content */
     if (!instance?.reference?.getAttribute("data-tooltip")?.trim())

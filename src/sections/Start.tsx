@@ -12,7 +12,7 @@ const Start = () => {
         label="Rand."
         tooltip="Amount of randomness. Max amount to shift note starts left/right, in ticks."
         min={0}
-        max={20}
+        max={10}
         step={1}
         value={get.randomness}
         defaultValue={defaults.start.randomness}
@@ -31,8 +31,8 @@ const Start = () => {
       <Range
         label="Shift"
         tooltip="How much to shift all note starts left/right, in ticks."
-        min={-20}
-        max={20}
+        min={-10}
+        max={10}
         step={1}
         value={get.shift}
         defaultValue={defaults.start.shift}

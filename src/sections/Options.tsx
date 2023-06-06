@@ -14,7 +14,7 @@ const Options = () => {
         label="Grid"
         tooltip="How many subdivisions per beat to show in the piano roll."
         min={1}
-        max={12}
+        max={6}
         step={1}
         value={get.grid}
         defaultValue={defaults.options.grid}

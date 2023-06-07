@@ -133,6 +133,7 @@ const PianoRoll = () => {
   return (
     <div
       className={classes.pianoRoll}
+      role="img"
       data-tooltip="Piano roll. Click and drag to pan. Scroll + alt/option to zoom. Double click to fit."
     >
       <svg

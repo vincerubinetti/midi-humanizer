@@ -24,7 +24,7 @@ const Options = () => {
         label="Gap"
         tooltip="Minimum amount of gap to leave between each note and the next one, in ticks."
         min={0}
-        max={20}
+        max={10}
         step={1}
         value={get.gap}
         defaultValue={defaults.options.gap}

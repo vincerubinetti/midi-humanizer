@@ -17,3 +17,4 @@ It is best used in close conjunction with your DAW, going back and forth with it
 This tool is not meant to [replace a DAW](https://en.wikipedia.org/wiki/Inner-platform_effect), it is only meant to fill a specific hole in functionality.
 Things that DAWs can already do adequately – like song editing, individual note editing, instrument playback, etc. – are not part of this tool.
 Pitch humanization is also not supported at this time.
+

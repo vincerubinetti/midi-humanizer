@@ -1,9 +1,9 @@
+import type { Note } from "@tonejs/midi/dist/Note";
+import { Midi } from "@tonejs/midi";
 import * as d3 from "d3";
 import { atom, getDefaultStore } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { clamp, range } from "lodash";
-import { Midi } from "@tonejs/midi";
-import { Note } from "@tonejs/midi/dist/Note";
 import { noteHeight } from "@/sections/PianoRoll";
 import { random } from "@/util/math";
 
@@ -53,7 +53,7 @@ export const pitchGuides = atom((get) =>
     width: get(midi)?.durationTicks || 96 * 16,
     height: noteHeight,
     black: !![1, 3, 6, 8, 10].includes(pitch % 12),
-  }))
+  })),
 );
 export const beatGuides = atom((get) => {
   const beatGuides = [];
@@ -153,7 +153,7 @@ export const humanized = atom((get) => {
           /** make sure not simultaneous */
           other.ticks > note.ticks &&
           /** check pitches */
-          (other.midi === note.midi || !get(options).poly)
+          (other.midi === note.midi || !get(options).poly),
       );
       if (nextNote) nextNotes.set(note, nextNote);
     }
@@ -180,7 +180,7 @@ export const humanized = atom((get) => {
             get(duration).randomness +
           /** transform */
           get(duration).shift) *
-          get(duration).scale
+          get(duration).scale,
       );
 
     /** enforce gaps */
@@ -196,7 +196,7 @@ export const humanized = atom((get) => {
       note.durationTicks = clamp(
         note.durationTicks,
         0,
-        (get(midi)?.durationTicks || 0) - note.ticks
+        (get(midi)?.durationTicks || 0) - note.ticks,
       );
     }
 

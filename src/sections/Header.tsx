@@ -1,10 +1,17 @@
-const Header = () => (
-  <header>
-    <h1>
-      <img src="logo.svg" style={{ height: "1em" }} alt="" />
-      MIDI Humanizer
-    </h1>
-  </header>
-);
+import type { ReactNode } from "react";
 
-export default Header;
+type Props = {
+  children?: ReactNode;
+};
+
+export default function Header({ children }: Props) {
+  return (
+    <header className="flex items-center justify-center gap-8 bg-accent-light p-4 max-lg:flex-col">
+      <h1 className="flex grow items-center gap-4 text-xl">
+        <img src="icon.svg" className="h-8" alt="" />
+        MIDI Humanizer
+      </h1>
+      {children}
+    </header>
+  );
+}

@@ -1,18 +1,19 @@
-import { DragEventHandler, useEffect, useRef, useState } from "react";
+import type { DragEventHandler } from "react";
+import { useRef, useState } from "react";
+import { useEventListener } from "@reactuses/core";
+import { Midi } from "@tonejs/midi";
+import clsx from "clsx";
 import { useAtom } from "jotai";
 import { startCase } from "lodash";
-import { Midi } from "@tonejs/midi";
-import Button from "@/components/Button";
-import Group from "@/components/Group";
+import Tooltip from "@/components/Tooltip";
 import { filename, humanized, incSeed, midi, options } from "@/state";
 import { downloadData } from "@/util/file";
-import classes from "./File.module.css";
 
-const File = () => {
+export default function File() {
   const [dragging, setDragging] = useState(false);
   const input = useRef<HTMLInputElement>(null);
 
-  const [, setMidi] = useAtom(midi);
+  const [getMidi, setMidi] = useAtom(midi);
   const [getOptions] = useAtom(options);
   const [getFilename, setFilename] = useAtom(filename);
   const [getHumanized] = useAtom(humanized);
@@ -55,29 +56,17 @@ const File = () => {
   const onDragEnter = () => setDragging(true);
 
   /** add drag enter listener to window, because overlay not interactable until dragging started */
-  useEffect(() => {
-    window.addEventListener("dragenter", onDragEnter);
-    () => window.removeEventListener("dragenter", onDragEnter);
-  });
-
-  /** on button drag file off, set drag flag off */
-  const onDragLeave = () => setDragging(false);
-
-  /** on button drag file */
-  const onDragOver: DragEventHandler<HTMLDivElement> = (event) =>
-    event.preventDefault();
+  useEventListener("dragenter", onDragEnter, window);
 
   /** on button file drop */
   const onDrop: DragEventHandler<HTMLDivElement> = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
     setDragging(false);
     const file = event.dataTransfer.files[0];
     if (file) onLoad(file as unknown as File);
   };
 
   return (
-    <Group label="File">
+    <div className="flex flex-wrap items-center justify-center gap-4">
       <input
         ref={input}
         onChange={(event) => {
@@ -86,26 +75,41 @@ const File = () => {
         }}
         type="file"
         accept="audio/midi"
-        style={{ display: "none" }}
+        className="hidden"
       />
-      <Button
-        onClick={onClick}
-        data-tooltip="Load MIDI file. Or drag and drop file onto window."
-      >
-        Load
-      </Button>
-      <Button onClick={onSave}>Save</Button>
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <div>{getMidi?.name}</div>
+        <div>{getFilename}</div>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <Tooltip content="Load MIDI file. Or drag and drop file onto window.">
+          <button className="w-40" onClick={onClick}>
+            Load
+          </button>
+        </Tooltip>
+        <button className="w-40" onClick={onSave}>
+          Save
+        </button>
+      </div>
       <div
-        className={classes.overlay}
-        onDragLeave={onDragLeave}
-        onDragOver={onDragOver}
-        onDrop={onDrop}
-        data-dragging={dragging}
+        className={clsx(
+          "fixed inset-0 z-100 grid place-items-center bg-black/75 text-white",
+          dragging
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0",
+        )}
+        onDragEnter={() => setDragging(true)}
+        onDragLeave={() => setDragging(false)}
+        onDragOver={(event) => event.preventDefault()}
+        onDrop={(event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          onDrop(event);
+        }}
       >
         Drop MIDI File
       </div>
-    </Group>
+    </div>
   );
-};
-
-export default File;
+}

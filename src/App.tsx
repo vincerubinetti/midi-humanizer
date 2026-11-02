@@ -1,37 +1,36 @@
+import "@fontsource-variable/outfit/wght.css";
+import "./styles.css";
 import Drift from "@/sections/Drift";
 import Duration from "@/sections/Duration";
 import File from "@/sections/File";
 import Footer from "@/sections/Footer";
 import Header from "@/sections/Header";
-import Info from "@/sections/Info";
 import Options from "@/sections/Options";
 import PianoRoll from "@/sections/PianoRoll";
 import Start from "@/sections/Start";
 import Track from "@/sections/Track";
 import Velocity from "@/sections/Velocity";
-import "@/components/tooltip";
-import "./App.css";
 
-const App = () => (
-  <>
-    <Header />
-    <main>
-      <File />
-      <section>
-        <Info />
+export default function App() {
+  return (
+    <>
+      <Header>
+        <File />
         <Track />
-      </section>
-      <PianoRoll />
-      <section>
-        <Start />
-        <Drift />
-        <Duration />
-        <Velocity />
-        <Options />
-      </section>
-    </main>
-    <Footer />
-  </>
-);
-
-export default App;
+      </Header>
+      <main>
+        <section>
+          <PianoRoll />
+        </section>
+        <section className="grid grid-cols-5 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1">
+          <Start />
+          <Drift />
+          <Duration />
+          <Velocity />
+          <Options />
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}

@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --breakpoint-sm: 30rem;
+  --breakpoint-md: 55rem;
+  --breakpoint-lg: 70rem;
+
+  --color-*: initial;
+
+  --color-accent: oklch(55% 0.1 0);
+  --color-accent-light: oklch(95% 0.025 70);
+
+  --color-black: black;
+  --color-gray: oklch(65% 0.01 0);
+  --color-light-gray: oklch(85% 0.01 0);
+  --color-off-white: oklch(95% 0.01 0);
+  --color-white: white;
+
+  --radius-*: initial;
+  --radius-md: 5px;
+
+  --font-weight-*: initial;
+
+  --font-weight-regular: 300;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+
+  --font-sans: "Outfit Variable", sans-serif;
+
+  --shadow-*: initial;
+
+  --shadow-md: 0 2px 10px #0002, 0 0 3px #0002;
+}
+
+@layer base {
+  * {
+    @apply underline-offset-2 outline-offset-2 outline-accent focus-visible:outline-2;
+  }
+
+  html {
+    @apply bg-white font-sans leading-normal font-regular text-black;
+  }
+
+  body {
+    @apply flex min-h-dvh flex-col;
+  }
+
+  #root {
+    @apply contents;
+  }
+
+  main {
+    @apply flex grow flex-col;
+  }
+
+  section {
+    @apply flex flex-wrap gap-4 p-4;
+  }
+
+  a {
+    @apply underline hover:no-underline;
+  }
+
+  fieldset {
+    @apply grid grid-cols-[auto_1fr_auto] content-start gap-4 rounded-md border border-light-gray p-4 pt-2;
+  }
+
+  legend {
+    @apply tracking-wider uppercase;
+  }
+
+  label {
+    @apply flex items-center gap-2;
+  }
+
+  select,
+  button {
+    @apply flex cursor-pointer appearance-none items-center justify-center rounded-md bg-accent p-2 text-white hover:bg-black;
+  }
+
+  .lucide {
+    @apply h-[1.1em] w-[unset];
+  }
+}

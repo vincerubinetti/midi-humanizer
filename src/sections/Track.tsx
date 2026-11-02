@@ -1,9 +1,7 @@
 import { useAtom } from "jotai";
-import Group from "@/components/Group";
-import Select from "@/components/Select";
 import { midi, track } from "@/state";
 
-const Info = () => {
+export default function Track() {
   const [getMidi] = useAtom(midi);
   const [getTrack, setTrack] = useAtom(track);
 
@@ -22,19 +20,23 @@ const Info = () => {
         track.instrument.percussion ? "percussion" : "",
       ]
         .filter(Boolean)
-        .join(" | ")
+        .join(" | "),
   );
 
   return (
-    <Group label="Track">
-      <Select
-        label="View"
-        options={instruments}
+    <label>
+      Track
+      <select
+        className="w-40"
         value={getTrack}
-        onChange={setTrack}
-      />
-    </Group>
+        onChange={({ target }) => setTrack(Number(target.value))}
+      >
+        {instruments.map((instrument, index) => (
+          <option key={index} value={index}>
+            {instrument}
+          </option>
+        ))}
+      </select>
+    </label>
   );
-};
-
-export default Info;
+}

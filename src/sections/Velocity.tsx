@@ -1,12 +1,11 @@
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import Range from "@/components/Range";
 import Tooltip from "@/components/Tooltip";
-import { defaults, setTrack, track } from "@/state";
+import { defaults, setTrack, trackAtom } from "@/state";
 
 export default function Velocity() {
   /** global state */
-  const [getTrack] = useAtom(track);
-  const get = getTrack.velocity;
+  const { velocity } = useAtomValue(trackAtom);
 
   return (
     <fieldset>
@@ -17,7 +16,7 @@ export default function Velocity() {
           min={-1}
           max={1}
           step={0.01}
-          value={get.randomness}
+          value={velocity.randomness}
           defaultValue={defaults.velocity.randomness}
           onChange={(value) =>
             setTrack((track) => {
@@ -32,7 +31,7 @@ export default function Velocity() {
           min={0}
           max={99}
           step={1}
-          value={get.seed}
+          value={velocity.seed}
           defaultValue={defaults.velocity.seed}
           onChange={(value) =>
             setTrack((track) => {
@@ -47,7 +46,7 @@ export default function Velocity() {
           min={-1}
           max={1}
           step={0.01}
-          value={get.shift}
+          value={velocity.shift}
           defaultValue={defaults.velocity.shift}
           onChange={(value) =>
             setTrack((track) => {
@@ -62,7 +61,7 @@ export default function Velocity() {
           min={0}
           max={2}
           step={0.01}
-          value={get.scale}
+          value={velocity.scale}
           defaultValue={defaults.velocity.scale}
           onChange={(value) =>
             setTrack((track) => {

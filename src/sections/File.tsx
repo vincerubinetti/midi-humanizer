@@ -2,16 +2,14 @@ import type { DragEventHandler } from "react";
 import { useRef, useState } from "react";
 import { useEventListener } from "@reactuses/core";
 import clsx from "clsx";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import Tooltip from "@/components/Tooltip";
-import { filename, humanized, loadMidi, midi } from "@/state";
-import { downloadData } from "@/util/file";
+import { fileAtom, loadFile, midiAtom, saveFile } from "@/state";
 
 export default function File({ className = "" }) {
   /** global state */
-  const [getMidi] = useAtom(midi);
-  const [getFilename] = useAtom(filename);
-  const [getHumanized] = useAtom(humanized);
+  const midi = useAtomValue(midiAtom);
+  const file = useAtomValue(fileAtom);
 
   /** local state */
   const [dragging, setDragging] = useState(false);
@@ -19,24 +17,10 @@ export default function File({ className = "" }) {
 
   /** upload file */
   const onLoad = async (file: File) => {
-    try {
-      /** get data from file upload */
-      const data = (await file.arrayBuffer()) || "";
-
-      /** load into state */
-      loadMidi(data, file.name);
-    } catch (error) {
-      console.error(error);
-    }
+    await loadFile(file);
 
     /** reset file input so the same file could be re-selected */
     if (input.current) input.current.value = "";
-  };
-
-  /** save file */
-  const onSave = () => {
-    if (!getHumanized) return;
-    downloadData(getHumanized.toArray(), getFilename, "audio/midi");
   };
 
   /** add drag enter listener to window, because overlay not interactable until dragging started */
@@ -51,28 +35,28 @@ export default function File({ className = "" }) {
 
   return (
     <div className={clsx("flex flex-wrap items-center gap-4", className)}>
-      <input
-        ref={input}
-        onChange={(event) => {
-          const file = event.target?.files?.[0];
-          if (file) onLoad(file);
-        }}
-        type="file"
-        accept="audio/midi"
-        className="hidden"
-      />
       <div className="flex flex-wrap items-center justify-center gap-2">
-        <div>{getMidi?.name}</div>
-        <div>{getFilename}</div>
+        <div>{midi?.name}</div>
+        <div>{file?.name}</div>
       </div>
 
       <div className="flex flex-wrap items-center justify-center gap-2">
+        <input
+          ref={input}
+          onChange={(event) => {
+            const file = event.target?.files?.[0];
+            if (file) onLoad(file);
+          }}
+          type="file"
+          accept="audio/midi"
+          className="hidden"
+        />
         <Tooltip content="Load MIDI file. Or drag and drop file onto window.">
           <button className="w-40" onClick={() => input?.current?.click()}>
             Load
           </button>
         </Tooltip>
-        <button className="w-40" onClick={onSave}>
+        <button className="w-40" onClick={saveFile}>
           Save
         </button>
       </div>

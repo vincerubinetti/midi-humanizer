@@ -1,14 +1,13 @@
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import Checkbox from "@/components/Checkbox";
 import Range from "@/components/Range";
 import Select from "@/components/Select";
 import Tooltip from "@/components/Tooltip";
-import { defaults, setTrack, track } from "@/state";
+import { defaults, setTrack, trackAtom } from "@/state";
 
 export default function Options() {
   /** global state */
-  const [getTrack] = useAtom(track);
-  const get = getTrack.options;
+  const { options } = useAtomValue(trackAtom);
 
   return (
     <fieldset>
@@ -19,7 +18,7 @@ export default function Options() {
           min={1}
           max={6}
           step={1}
-          value={get.grid}
+          value={options.grid}
           defaultValue={defaults.options.grid}
           onChange={(value) =>
             setTrack((track) => {
@@ -34,7 +33,7 @@ export default function Options() {
           min={0}
           max={10}
           step={1}
-          value={get.gap}
+          value={options.gap}
           defaultValue={defaults.options.gap}
           onChange={(value) =>
             setTrack((track) => {
@@ -46,7 +45,7 @@ export default function Options() {
       <Tooltip content="Whether to extend each note to next note before randomizing.">
         <Checkbox
           label="Legato"
-          value={get.legato}
+          value={options.legato}
           onChange={(value) =>
             setTrack((track) => {
               track.options.legato = value;
@@ -57,7 +56,7 @@ export default function Options() {
       <Tooltip content='Whether to treat notes as polyphonic. If on, "next note" in "Gap" and "Legato" options means next note of same pitch. If off, it means next note in time, regardless of pitch.'>
         <Checkbox
           label="Poly."
-          value={get.polyphonic}
+          value={options.polyphonic}
           onChange={(value) =>
             setTrack((track) => {
               track.options.polyphonic = value;
@@ -72,7 +71,7 @@ export default function Options() {
             { value: "uniform", label: "Uniform" },
             { value: "triangular", label: "Triangular" },
           ]}
-          value={get.distribution}
+          value={options.distribution}
           onChange={(value) =>
             setTrack((track) => {
               track.options.distribution = value;

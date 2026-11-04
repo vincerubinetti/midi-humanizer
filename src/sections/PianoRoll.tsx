@@ -1,18 +1,18 @@
 import { useRef } from "react";
 import { useElementSize } from "@reactuses/core/useElementSize";
 import * as d3 from "d3";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import Tooltip from "@/components/Tooltip";
 import {
-  beatGuides,
-  beatRange,
-  driftCurve,
-  humanized,
-  midi,
-  pitchGuides,
-  pitchRange,
-  track,
-  trackIndex,
+  beatGuidesAtom,
+  beatRangeAtom,
+  driftCurveAtom,
+  humanizedAtom,
+  midiAtom,
+  pitchGuidesAtom,
+  pitchRangeAtom,
+  trackAtom,
+  trackIndexAtom,
 } from "@/state";
 import { useTransform } from "@/util/hooks";
 import { round } from "@/util/math";
@@ -32,23 +32,23 @@ export default function PianoRoll() {
   bottomPanelHeight ||= 10;
 
   /** global state */
-  const [getMidi] = useAtom(midi);
-  const [getTrackIndex] = useAtom(trackIndex);
-  const [getTrack] = useAtom(track);
-  const [getDriftCurve] = useAtom(driftCurve);
-  const [getPitchGuides] = useAtom(pitchGuides);
-  const [getBeatGuides] = useAtom(beatGuides);
-  const [getPitchRange] = useAtom(pitchRange);
-  const [getBeatRange] = useAtom(beatRange);
-  const [getHumanized] = useAtom(humanized);
+  const midi = useAtomValue(midiAtom);
+  const trackIndex = useAtomValue(trackIndexAtom);
+  const track = useAtomValue(trackAtom);
+  const driftCurve = useAtomValue(driftCurveAtom);
+  const pitchGuides = useAtomValue(pitchGuidesAtom);
+  const beatGuides = useAtomValue(beatGuidesAtom);
+  const pitchRange = useAtomValue(pitchRangeAtom);
+  const beatRange = useAtomValue(beatRangeAtom);
+  const humanized = useAtomValue(humanizedAtom);
 
   /** dimensions of piano roll in svg coordinates */
-  const width = getPitchGuides[0]?.width || 0;
-  const height = getBeatGuides[0]?.height || 0;
-  const top = 127 - getPitchRange.max - 2;
-  const bottom = 127 - getPitchRange.min + 3;
-  const left = round(getBeatRange.min, getMidi?.header.ppq || 1, "floor");
-  const right = round(getBeatRange.max, getMidi?.header.ppq || 1, "ceil");
+  const width = pitchGuides[0]?.width || 0;
+  const height = beatGuides[0]?.height || 0;
+  const top = 127 - pitchRange.max - 2;
+  const bottom = 127 - pitchRange.min + 3;
+  const left = round(beatRange.min, midi?.header.ppq || 1, "floor");
+  const right = round(beatRange.max, midi?.header.ppq || 1, "ceil");
 
   /** untransformed scales */
   const xBaseScale = d3
@@ -80,23 +80,21 @@ export default function PianoRoll() {
 
   /** make svg path from drift curve */
   const driftPath = [0]
-    .concat(getDriftCurve)
+    .concat(driftCurve)
     .concat(0)
     .map((value, index) =>
       [
         index === 0 ? "M" : "L",
         xScale(index),
-        (bottomPanelHeight / 2) * (1 - (getTrack.drift.amount * value) / 10),
+        (bottomPanelHeight / 2) * (1 - (track.drift.amount * value) / 10),
       ].join(" "),
     )
     .join(" ");
 
   /** get notes */
-  const originalNotes = getMidi
-    ? getMidi.tracks[getTrackIndex]?.notes || []
-    : [];
-  const humanizedNotes = getHumanized
-    ? getHumanized.tracks[getTrackIndex]?.notes || []
+  const originalNotes = midi ? midi.tracks[trackIndex]?.notes || [] : [];
+  const humanizedNotes = humanized
+    ? humanized.tracks[trackIndex]?.notes || []
     : [];
 
   return (
@@ -128,7 +126,7 @@ export default function PianoRoll() {
         >
           {/* horizontal pitch guides */}
           <g>
-            {getPitchGuides.map((pitch, index) => (
+            {pitchGuides.map((pitch, index) => (
               <rect
                 key={index}
                 x={xScale(0)}
@@ -142,7 +140,7 @@ export default function PianoRoll() {
 
           {/* vertical beat guides */}
           <g className="stroke-gray">
-            {getBeatGuides.map((beat, index) => (
+            {beatGuides.map((beat, index) => (
               <line
                 key={index}
                 x1={xScale(beat.left)}
@@ -204,7 +202,7 @@ export default function PianoRoll() {
           <g>
             {/* vertical beat guides */}
             <g className="stroke-gray">
-              {getBeatGuides.map((beat, index) => (
+              {beatGuides.map((beat, index) => (
                 <line
                   key={index}
                   x1={xScale(beat.left)}
@@ -226,7 +224,7 @@ export default function PianoRoll() {
             <rect
               x={xScale(0)}
               y={0}
-              width={xScale(getMidi?.durationTicks || 0) - xScale(0)}
+              width={xScale(midi?.durationTicks || 0) - xScale(0)}
               height={bottomPanelHeight}
               className="fill-none stroke-black"
             />

@@ -1,12 +1,11 @@
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import Range from "@/components/Range";
 import Tooltip from "@/components/Tooltip";
-import { defaults, setTrack, track } from "@/state";
+import { defaults, setTrack, trackAtom } from "@/state";
 
 export default function Drift() {
   /** global state */
-  const [getTrack] = useAtom(track);
-  const get = getTrack.drift;
+  const { drift } = useAtomValue(trackAtom);
 
   return (
     <fieldset>
@@ -18,7 +17,7 @@ export default function Drift() {
           min={-10}
           max={10}
           step={1}
-          value={get.amount}
+          value={drift.amount}
           defaultValue={defaults.drift.amount}
           onChange={(value) =>
             setTrack((track) => {
@@ -33,7 +32,7 @@ export default function Drift() {
           min={0}
           max={99}
           step={1}
-          value={get.seed}
+          value={drift.seed}
           defaultValue={defaults.drift.seed}
           onChange={(value) =>
             setTrack((track) => {
@@ -48,7 +47,7 @@ export default function Drift() {
           min={96 * 0.5}
           max={96 * 10}
           step={1}
-          value={get.step}
+          value={drift.step}
           defaultValue={defaults.drift.step}
           onChange={(value) =>
             setTrack((track) => {

@@ -1,19 +1,19 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import Checkbox from "@/components/Checkbox";
 import Select from "@/components/Select";
 import Tooltip from "@/components/Tooltip";
-import { editAll, midi, reset, trackIndex } from "@/state";
+import { editAllAtom, midiAtom, reset, trackIndexAtom } from "@/state";
 
 export default function Track() {
   /** global state */
-  const [getMidi] = useAtom(midi);
-  const [getTrackIndex, setTrackIndex] = useAtom(trackIndex);
-  const [getEditAll, setEditAll] = useAtom(editAll);
+  const midi = useAtomValue(midiAtom);
+  const [trackIndex, setTrackIndex] = useAtom(trackIndexAtom);
+  const [editAll, setEditAll] = useAtom(editAllAtom);
 
-  if (!getMidi) return <></>;
+  if (!midi) return <></>;
 
   /** list of instruments */
-  const instruments = getMidi.tracks.map(({ name, instrument }, index) => ({
+  const instruments = midi.tracks.map(({ name, instrument }, index) => ({
     value: String(index),
     label: `${index + 1}. ${name} - ${instrument.name}`,
   }));
@@ -23,7 +23,7 @@ export default function Track() {
       <legend>Track</legend>
       <Select
         options={instruments}
-        value={String(getTrackIndex)}
+        value={String(trackIndex)}
         onChange={(value) => setTrackIndex(Number(value))}
         aria-label="Track"
       />
@@ -31,13 +31,13 @@ export default function Track() {
         <Checkbox
           className="flex!"
           label="Edit all"
-          value={getEditAll}
+          value={editAll}
           onChange={setEditAll}
         />
       </Tooltip>
       <Tooltip
         content={
-          getEditAll
+          editAll
             ? "Reset values to defaults for all tracks."
             : "Reset values to defaults for this track."
         }

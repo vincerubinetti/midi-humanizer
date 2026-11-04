@@ -4,37 +4,47 @@ import * as d3 from "d3";
 import { atom, getDefaultStore } from "jotai";
 import { clamp, range, startCase } from "lodash";
 import sample from "@/assets/sample.mid?url";
+import { downloadData } from "@/util/file";
 import { random } from "@/util/math";
 
 /** parsed midi file data */
-export const midi = atom<Midi | null>(null);
+export const midiAtom = atom<Midi | null>(null);
 
-/** filename of uploaded file */
-export const filename = atom("");
+/** uploaded file */
+export const fileAtom = atom<File | null>(null);
 
-/** load midi data */
-export const loadMidi = (data: ArrayBuffer, fileName: string) => {
+/** load file data */
+export const loadFile = async (file: File) => {
   /** parse midi */
-  const newMidi = new Midi(data);
-  console.debug(newMidi);
+  const data = await file.arrayBuffer();
+  const midi = new Midi(data);
+  console.debug(midi);
 
   /** name fallback */
-  if (!newMidi.name) newMidi.name = startCase(fileName.replace(/\.midi?$/, ""));
+  if (!midi.name) midi.name = startCase(file.name.replace(/\.midi?$/, ""));
 
   /** set state */
-  store.set(midi, newMidi);
-  store.set(filename, fileName);
+  store.set(midiAtom, midi);
+  store.set(fileAtom, file);
 
   /** init tracks state */
   store.set(
-    tracks,
-    newMidi.tracks.map(() => window.structuredClone(defaults)),
+    tracksAtom,
+    midi.tracks.map(() => window.structuredClone(defaults)),
   );
+};
+
+/** save file */
+export const saveFile = () => {
+  const file = store.get(fileAtom);
+  const humanized = store.get(humanizedAtom);
+  if (!humanized) return;
+  downloadData(humanized.toArray(), file?.name || "output.mid", "audio/midi");
 };
 
 /** load sample file */
 window.fetch(sample).then(async (response) => {
-  loadMidi(await response.arrayBuffer(), "sample.mid");
+  loadFile(new File([await response.arrayBuffer()], "sample.mid"));
 });
 
 /** defaults for reset-able fields */
@@ -55,27 +65,31 @@ export const defaults = {
 export type Track = typeof defaults;
 
 /** params for each track */
-export const tracks = atom<Track[]>([]);
+export const tracksAtom = atom<Track[]>([]);
 
 /** selected track index */
-export const trackIndex = atom(0);
+export const trackIndexAtom = atom(0);
 
 /** (derived) selected track */
-export const track = atom((get) => get(tracks)[get(trackIndex)] ?? defaults);
+export const trackAtom = atom(
+  (get) => get(tracksAtom)[get(trackIndexAtom)] ?? defaults,
+);
 
 /** whether editing a control updates all tracks */
-export const editAll = atom(false);
+export const editAllAtom = atom(false);
 
 /** (derived) index to use for track editing */
-export const editIndex = atom((get) => (get(editAll) ? -1 : get(trackIndex)));
+export const editIndexAtom = atom((get) =>
+  get(editAllAtom) ? -1 : get(trackIndexAtom),
+);
 
 /** set track(s) value */
 export const setTrack = (mutate: (track: Track) => void | Track) =>
-  store.set(tracks, (tracks) => {
+  store.set(tracksAtom, (tracks) => {
     /** which tracks to set value on */
-    const indices = store.get(editAll)
+    const indices = store.get(editAllAtom)
       ? range(tracks.length)
-      : [store.get(editIndex)];
+      : [store.get(editIndexAtom)];
     /** clone for mutating */
     tracks = window.structuredClone(tracks);
     /** run mutation function */
@@ -91,8 +105,8 @@ export const setTrack = (mutate: (track: Track) => void | Track) =>
 export const reset = () => setTrack(() => defaults);
 
 /** (derived) lowest/highest pitch of current track */
-export const pitchRange = atom((get) => {
-  const currentTrack = get(midi)?.tracks[get(trackIndex)];
+export const pitchRangeAtom = atom((get) => {
+  const currentTrack = get(midiAtom)?.tracks[get(trackIndexAtom)];
   if (!currentTrack) return { min: 0, max: 127 };
   let min = 127;
   let max = 0;
@@ -104,8 +118,8 @@ export const pitchRange = atom((get) => {
 });
 
 /** (derived) earliest/latest note of current track */
-export const beatRange = atom((get) => {
-  const currentTrack = get(midi)?.tracks[get(trackIndex)];
+export const beatRangeAtom = atom((get) => {
+  const currentTrack = get(midiAtom)?.tracks[get(trackIndexAtom)];
   if (!currentTrack) return { min: 0, max: 96 * 16 };
   let min = Infinity;
   let max = -Infinity;
@@ -118,30 +132,30 @@ export const beatRange = atom((get) => {
 });
 
 /** (derived) horizontal pitch guides */
-export const pitchGuides = atom((get) =>
+export const pitchGuidesAtom = atom((get) =>
   range(128).map((pitch) => ({
     top: pitch,
-    width: get(midi)?.durationTicks || 96 * 16,
+    width: get(midiAtom)?.durationTicks || 96 * 16,
     black: !![1, 3, 6, 8, 10].includes(pitch % 12),
   })),
 );
 
 /** (derived) vertical beat guides */
-export const beatGuides = atom((get) => {
+export const beatGuidesAtom = atom((get) => {
   const beatGuides = [];
 
   /** get midi data */
-  const ppq = get(midi)?.header.ppq || 96;
-  const durationTicks = get(midi)?.durationTicks || ppq * 16;
+  const ppq = get(midiAtom)?.header.ppq || 96;
+  const durationTicks = get(midiAtom)?.durationTicks || ppq * 16;
 
   /** beat sub divisions */
-  const subs = range(0, ppq, ppq / get(track).options.grid);
+  const subs = range(0, ppq, ppq / get(trackAtom).options.grid);
 
   /** create beats */
   for (let tick = 0; tick < durationTicks; tick += ppq) {
     for (const sub of subs) {
       const measure =
-        get(midi)?.header.ticksToMeasures(tick + sub) ||
+        get(midiAtom)?.header.ticksToMeasures(tick + sub) ||
         (tick + sub) / (ppq * 4);
 
       beatGuides.push({
@@ -189,29 +203,29 @@ const makeDriftCurve = (
 };
 
 /** (derived) drift curve of selected track */
-export const driftCurve = atom((get) =>
+export const driftCurveAtom = atom((get) =>
   makeDriftCurve(
-    get(midi)?.durationTicks || 0,
-    get(track).drift,
-    get(track).options.distribution,
+    get(midiAtom)?.durationTicks || 0,
+    get(trackAtom).drift,
+    get(trackAtom).options.distribution,
   ),
 );
 
 /** (derived) humanized midi data*/
-export const humanized = atom((get) => {
+export const humanizedAtom = atom((get) => {
   /** deep clone to avoid altering original midi */
-  const humanizedMidi = get(midi)?.clone();
+  const humanizedMidi = get(midiAtom)?.clone();
   if (!humanizedMidi) return;
 
   /** go through each track */
   for (const [trackIndex, track] of humanizedMidi.tracks.entries()) {
     /** get track params */
     const { start, drift, duration, velocity, options } =
-      get(tracks)[trackIndex] ?? defaults;
+      get(tracksAtom)[trackIndex] ?? defaults;
 
     /** make drift curve for track */
     const curve = makeDriftCurve(
-      get(midi)?.durationTicks || 0,
+      get(midiAtom)?.durationTicks || 0,
       drift,
       options.distribution,
     );
@@ -230,7 +244,7 @@ export const humanized = atom((get) => {
       /** to int */
       note.ticks = Math.round(note.ticks);
       /** limit */
-      note.ticks = clamp(note.ticks, 0, get(midi)?.durationTicks || 0);
+      note.ticks = clamp(note.ticks, 0, get(midiAtom)?.durationTicks || 0);
     }
 
     /** make sure notes still in chronological order */
@@ -258,7 +272,7 @@ export const humanized = atom((get) => {
         /** extend this note to next */
         note.durationTicks =
           /** where next note starts */
-          (nextNote?.ticks || get(midi)?.durationTicks || 0) -
+          (nextNote?.ticks || get(midiAtom)?.durationTicks || 0) -
           /** where this note starts */
           note.ticks;
       }
@@ -280,7 +294,7 @@ export const humanized = atom((get) => {
       /** lookup next note... */
       const nextNote = nextNotes.get(note);
       /** where next note starts */
-      const nextTicks = nextNote?.ticks || get(midi)?.durationTicks || 0;
+      const nextTicks = nextNote?.ticks || get(midiAtom)?.durationTicks || 0;
       /** limit overlap */
       if (note.ticks + note.durationTicks + options.gap >= nextTicks)
         note.durationTicks = nextTicks - note.ticks - options.gap;
@@ -288,7 +302,7 @@ export const humanized = atom((get) => {
       note.durationTicks = clamp(
         note.durationTicks,
         0,
-        (get(midi)?.durationTicks || 0) - note.ticks,
+        (get(midiAtom)?.durationTicks || 0) - note.ticks,
       );
     }
 

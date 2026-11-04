@@ -19,7 +19,7 @@ export default function Track() {
   }));
 
   return (
-    <fieldset className="col-span-full flex items-center gap-8">
+    <fieldset className="col-span-full flex flex-wrap items-center gap-x-8 gap-y-4">
       <legend>Track</legend>
       <Select
         options={instruments}

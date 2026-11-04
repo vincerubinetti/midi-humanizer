@@ -13,7 +13,7 @@ export default function Options() {
   return (
     <fieldset>
       <legend>Options</legend>
-      <Tooltip content="How many subdivisions per beat to show in piano roll.">
+      <Tooltip content="How many subdivisions per beat to show.">
         <Range
           label="Grid"
           min={1}

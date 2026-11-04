@@ -2,7 +2,6 @@ import type { Note } from "@tonejs/midi/dist/Note";
 import { Midi } from "@tonejs/midi";
 import * as d3 from "d3";
 import { atom, getDefaultStore } from "jotai";
-import { atomWithStorage } from "jotai/utils";
 import { clamp, range, startCase } from "lodash";
 import sample from "@/assets/sample.mid?url";
 import { random } from "@/util/math";
@@ -56,7 +55,7 @@ export const defaults = {
 export type Track = typeof defaults;
 
 /** params for each track */
-export const tracks = atomWithStorage<Track[]>("tracks", []);
+export const tracks = atom<Track[]>([]);
 
 /** selected track index */
 export const trackIndex = atom(0);

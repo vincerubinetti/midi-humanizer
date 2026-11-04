@@ -7,8 +7,8 @@ type Props = {
 };
 
 const offset = 16;
-const arrow = 12;
 const padding = 16;
+const arrow = 12;
 
 export default function Tooltip({ children, content }: Props) {
   return (

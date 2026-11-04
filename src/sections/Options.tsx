@@ -1,6 +1,7 @@
 import { useAtom } from "jotai";
 import Checkbox from "@/components/Checkbox";
 import Range from "@/components/Range";
+import Select from "@/components/Select";
 import Tooltip from "@/components/Tooltip";
 import { defaults, options, reset } from "@/state";
 
@@ -21,7 +22,7 @@ export default function Options() {
           onChange={(value) => set((state) => ({ ...state, grid: value }))}
         />
       </Tooltip>
-      <Tooltip content="Minimum amount of gap to leave between each note and the next one, in ticks.">
+      <Tooltip content="Minimum amount of gap to leave between each note and the next note, in ticks.">
         <Range
           label="Gap"
           min={0}
@@ -32,26 +33,33 @@ export default function Options() {
           onChange={(value) => set((state) => ({ ...state, gap: value }))}
         />
       </Tooltip>
-      <Tooltip content="Whether to extend each note to the next one, before randomizing.">
+      <Tooltip content="Whether to extend each note to the next note, before randomizing.">
         <Checkbox
           label="Legato"
           value={get.legato}
           onChange={(value) => set((state) => ({ ...state, legato: value }))}
         />
       </Tooltip>
-      <Tooltip content='Whether to treat notes as polyphonic. If on, "next note" in the "Gap" and "Legato" options means the next note of the same pitch. If off, it means the next note in time, regardless of pitch.'>
+      <Tooltip content='Whether to treat notes as polyphonic. If on, "next note" in the "Gap" and "Legato" options means the next note of the same pitch. If off, it means the very next note in time, regardless of pitch.'>
         <Checkbox
           label="Poly."
-          value={get.poly}
-          onChange={(value) => set((state) => ({ ...state, poly: value }))}
+          value={get.polyphonic}
+          onChange={(value) =>
+            set((state) => ({ ...state, polyphonic: value }))
+          }
         />
       </Tooltip>
-      <Tooltip content="Whether to automatically add one to each seed parameter when a new file is loaded. Useful if you're working on lots of similar files and don't want them to have the same randomness.">
-        <Checkbox
-          label="Seed+"
-
-          value={get.incSeed}
-          onChange={(value) => set((state) => ({ ...state, incSeed: value }))}
+      <Tooltip content='How to distribute randomness. "Uniform" means evenly from -100% to 100%, "triangular" means more likely to be near 0%.'>
+        <Select
+          label="Dist."
+          options={[
+            { value: "uniform", label: "Uniform" },
+            { value: "triangular", label: "Triangular" },
+          ]}
+          value={get.distribution}
+          onChange={(value) =>
+            set((state) => ({ ...state, distribution: value }))
+          }
         />
       </Tooltip>
       <Tooltip content="Reset all parameters to defaults.">

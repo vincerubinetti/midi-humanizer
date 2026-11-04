@@ -2,12 +2,12 @@
 
 @theme {
   --breakpoint-sm: 30rem;
-  --breakpoint-md: 55rem;
+  --breakpoint-md: 50rem;
   --breakpoint-lg: 70rem;
 
   --color-*: initial;
 
-  --color-accent: oklch(55% 0.1 0);
+  --color-accent: oklch(50% 0.15 0);
   --color-accent-light: oklch(95% 0.025 70);
 
   --color-black: black;
@@ -49,14 +49,6 @@
     @apply contents;
   }
 
-  main {
-    @apply flex grow flex-col;
-  }
-
-  section {
-    @apply flex flex-wrap gap-4 p-4;
-  }
-
   a {
     @apply underline hover:no-underline;
   }
@@ -69,11 +61,6 @@
     @apply tracking-wider uppercase;
   }
 
-  label {
-    @apply flex items-center gap-2;
-  }
-
-  select,
   button {
     @apply flex cursor-pointer appearance-none items-center justify-center rounded-md bg-accent p-2 text-white hover:bg-black;
   }

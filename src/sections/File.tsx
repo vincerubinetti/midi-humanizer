@@ -6,20 +6,18 @@ import clsx from "clsx";
 import { useAtom } from "jotai";
 import { startCase } from "lodash";
 import Tooltip from "@/components/Tooltip";
-import { filename, humanized, incSeed, midi, options } from "@/state";
+import { filename, humanized, midi } from "@/state";
 import { downloadData } from "@/util/file";
 
 export default function File() {
-  const [dragging, setDragging] = useState(false);
-  const input = useRef<HTMLInputElement>(null);
-
+  /** global state */
   const [getMidi, setMidi] = useAtom(midi);
-  const [getOptions] = useAtom(options);
   const [getFilename, setFilename] = useAtom(filename);
   const [getHumanized] = useAtom(humanized);
 
-  /** click actual file input on button click */
-  const onClick = () => input?.current?.click();
+  /** local state */
+  const [dragging, setDragging] = useState(false);
+  const input = useRef<HTMLInputElement>(null);
 
   /** upload file */
   const onLoad = async (file: File) => {
@@ -29,15 +27,12 @@ export default function File() {
 
       /** parse midi */
       const midi = new Midi(data);
-      console.info(midi);
+      console.debug(midi);
 
       /** set state data */
       if (!midi.name) midi.name = startCase(file.name.replace(/\.midi?$/, ""));
       setMidi(midi);
       setFilename(file.name);
-
-      /** increment seeds */
-      if (getOptions.incSeed) incSeed();
     } catch (error) {
       console.error(error);
     }
@@ -52,11 +47,8 @@ export default function File() {
     downloadData(getHumanized.toArray(), getFilename, "audio/midi");
   };
 
-  /** on button drag file over, set drag flag on */
-  const onDragEnter = () => setDragging(true);
-
   /** add drag enter listener to window, because overlay not interactable until dragging started */
-  useEventListener("dragenter", onDragEnter, window);
+  useEventListener("dragenter", () => setDragging(true), window);
 
   /** on button file drop */
   const onDrop: DragEventHandler<HTMLDivElement> = (event) => {
@@ -84,7 +76,7 @@ export default function File() {
 
       <div className="flex flex-wrap items-center justify-center gap-2">
         <Tooltip content="Load MIDI file. Or drag and drop file onto window.">
-          <button className="w-40" onClick={onClick}>
+          <button className="w-40" onClick={() => input?.current?.click()}>
             Load
           </button>
         </Tooltip>
@@ -99,7 +91,6 @@ export default function File() {
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0",
         )}
-        onDragEnter={() => setDragging(true)}
         onDragLeave={() => setDragging(false)}
         onDragOver={(event) => event.preventDefault()}
         onDrop={(event) => {

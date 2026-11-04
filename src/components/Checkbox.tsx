@@ -10,20 +10,20 @@ type Props = {
 export default function Checkbox({ label, value, onChange, ...props }: Props) {
   return (
     <label
-      className="group relative isolate col-span-full grid cursor-pointer grid-cols-subgrid gap-4 rounded-md hover:bg-off-white"
+      className="group relative isolate col-span-full grid cursor-pointer grid-cols-subgrid items-center gap-2 rounded-md hover:bg-off-white"
       {...props}
     >
-      <div className="absolute -inset-1 -z-10 rounded-md group-hover:bg-off-white" />
       {label}
-      <div className="relative grid size-5 place-items-center rounded-md bg-accent text-white *:absolute group-hover:bg-black focus-within:outline-2">
+      <div className="relative col-start-2 -col-end-1 grid size-5 place-items-center rounded-md bg-accent text-white *:absolute group-hover:bg-black focus-within:outline-2">
         <input
+          className="sr-only"
           type="checkbox"
           checked={value}
           onChange={({ target }) => onChange(target.checked)}
-          className="sr-only"
         />
         {value && <CheckIcon />}
       </div>
+      <div className="pointer-events-none absolute -inset-1 -z-10 rounded-md group-hover:bg-off-white" />
     </label>
   );
 }

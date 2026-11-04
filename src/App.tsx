@@ -18,11 +18,11 @@ export default function App() {
         <File />
         <Track />
       </Header>
-      <main>
-        <section>
+      <main className="flex grow flex-col">
+        <section className="flex flex-wrap gap-4 p-4">
           <PianoRoll />
         </section>
-        <section className="grid grid-cols-5 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1">
+        <section className="grid grid-cols-5 gap-4 p-4 max-lg:grid-cols-3 max-md:grid-cols-2 max-sm:grid-cols-1">
           <Start />
           <Drift />
           <Duration />

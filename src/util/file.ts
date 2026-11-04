@@ -10,5 +10,5 @@ export const downloadData = (
   a.href = url;
   a.download = filename;
   a.click();
-  setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+  window.URL.revokeObjectURL(url);
 };

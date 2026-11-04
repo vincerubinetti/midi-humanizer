@@ -24,21 +24,17 @@ export default function Range({
   return (
     <label
       {...props}
-      className="group relative isolate col-span-full grid grid-cols-subgrid gap-4"
+      className="group relative isolate col-span-full grid grid-cols-subgrid items-center gap-2"
       onDoubleClick={() => onChange(defaultValue)}
     >
-      <div className="absolute -inset-1 -z-10 rounded-md group-hover:bg-off-white" />
       {label}
       <Slider.Root
+        className="flex grow flex-col gap-2"
         value={value}
-        onValueChange={(value) => {
-          if (!value) return;
-          onChange?.(value);
-        }}
+        onValueChange={onChange}
         min={min}
         max={max}
         step={step}
-        className="flex min-w-10 grow flex-col gap-2"
       >
         <Slider.Control className="flex cursor-pointer touch-none items-center p-2 text-accent select-none group-hover:text-black">
           <Slider.Track className="h-1 w-full rounded-full bg-off-white group-hover:bg-light-gray">
@@ -48,12 +44,13 @@ export default function Range({
         </Slider.Control>
       </Slider.Root>
       <input
-        className="w-12 min-w-0 rounded-md"
+        className="w-10 rounded-md"
         type="number"
         step={step}
         value={value}
         onChange={({ target }) => onChange(Number(target.value))}
       />
+      <div className="pointer-events-none absolute -inset-1 -z-10 rounded-md group-hover:bg-off-white" />
     </label>
   );
 }

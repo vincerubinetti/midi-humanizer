@@ -42,7 +42,7 @@ export default function Track() {
             : "Reset values to defaults for this track."
         }
       >
-        <button className="w-40" onClick={reset}>
+        <button className="w-32" onClick={reset}>
           Reset
         </button>
       </Tooltip>

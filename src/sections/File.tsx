@@ -1,10 +1,10 @@
-import type { DragEventHandler } from "react";
 import { useRef, useState } from "react";
 import { useEventListener } from "@reactuses/core";
 import clsx from "clsx";
 import { useAtomValue } from "jotai";
 import Tooltip from "@/components/Tooltip";
-import { fileAtom, loadFile, midiAtom, saveFile } from "@/state";
+import { fileAtom, load, midiAtom, mimeType, pickerTypes, save } from "@/state";
+import { loadFileDrop, loadFilePicker } from "@/util/file";
 
 export default function File({ className = "" }) {
   /** global state */
@@ -13,25 +13,11 @@ export default function File({ className = "" }) {
 
   /** local state */
   const [dragging, setDragging] = useState(false);
-  const input = useRef<HTMLInputElement>(null);
-
-  /** upload file */
-  const onLoad = async (file: File) => {
-    await loadFile(file);
-
-    /** reset file input so the same file could be re-selected */
-    if (input.current) input.current.value = "";
-  };
+  const [loadMessage, setLoadMessage] = useMessage();
+  const [saveMessage, setSaveMessage] = useMessage();
 
   /** add drag enter listener to window, because overlay not interactable until dragging started */
   useEventListener("dragenter", () => setDragging(true), window);
-
-  /** on button file drop */
-  const onDrop: DragEventHandler<HTMLDivElement> = (event) => {
-    setDragging(false);
-    const file = event.dataTransfer.files[0];
-    if (file) onLoad(file as unknown as File);
-  };
 
   return (
     <div className={clsx("flex flex-wrap items-center gap-4", className)}>
@@ -40,25 +26,34 @@ export default function File({ className = "" }) {
         <div>{file?.name}</div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-center gap-2">
-        <input
-          ref={input}
-          onChange={(event) => {
-            const file = event.target?.files?.[0];
-            if (file) onLoad(file);
-          }}
-          type="file"
-          accept="audio/midi"
-          className="hidden"
-        />
+      <div className="flex flex-wrap items-center justify-center gap-2 *:w-32">
         <Tooltip content="Load MIDI file. Or drag and drop file onto window.">
-          <button className="w-40" onClick={() => input?.current?.click()}>
-            Load
+          <button
+            onClick={async () => {
+              /** load file from picker */
+              const picked = await loadFilePicker(pickerTypes, mimeType);
+
+              /** user canceled */
+              if (!picked) return;
+
+              /** load file into state */
+              const { file, handle } = picked;
+              load(file, handle);
+              setLoadMessage("Success");
+            }}
+          >
+            {loadMessage || "Load"}
           </button>
         </Tooltip>
-        <button className="w-40" onClick={saveFile}>
-          Save
-        </button>
+        <Tooltip content="Save new file or in place of originally opened file.">
+          <button
+            onClick={async () => {
+              if (await save()) setSaveMessage("Success");
+            }}
+          >
+            {saveMessage || "Save"}
+          </button>
+        </Tooltip>
       </div>
       <div
         className={clsx(
@@ -69,10 +64,21 @@ export default function File({ className = "" }) {
         )}
         onDragLeave={() => setDragging(false)}
         onDragOver={(event) => event.preventDefault()}
-        onDrop={(event) => {
+        onDrop={async (event) => {
+          /** handle event */
           event.preventDefault();
           event.stopPropagation();
-          onDrop(event);
+          setDragging(false);
+
+          /** load file from drop */
+          const picked = await loadFileDrop(event.dataTransfer);
+          /** user canceled */
+          if (!picked) return;
+
+          /** load file into state */
+          const { file, handle } = picked;
+          await load(file, handle);
+          setLoadMessage("Success");
         }}
       >
         Drop MIDI File
@@ -80,3 +86,15 @@ export default function File({ className = "" }) {
     </div>
   );
 }
+
+/** message with timeout */
+const useMessage = () => {
+  const [message, _setMessage] = useState("");
+  const timer = useRef(0);
+  const setMessage = (message: string, time = 1000) => {
+    window.clearTimeout(timer.current);
+    _setMessage(message);
+    timer.current = window.setTimeout(() => _setMessage(""), time);
+  };
+  return [message, setMessage] as const;
+};

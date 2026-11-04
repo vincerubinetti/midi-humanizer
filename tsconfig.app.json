@@ -3,7 +3,7 @@
     "target": "ESNext",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "types": ["vite/client"],
+    "types": ["vite/client", "wicg-file-system-access"],
     "skipLibCheck": true,
     "isolatedModules": true,
 

@@ -4,8 +4,15 @@ import * as d3 from "d3";
 import { atom, getDefaultStore } from "jotai";
 import { clamp, range, startCase } from "lodash";
 import sample from "@/assets/sample.mid?url";
-import { downloadData } from "@/util/file";
+import { saveFile } from "@/util/file";
 import { random } from "@/util/math";
+
+/** mime type for regular download */
+export const mimeType = "audio/midi";
+/** types for file system access api pickers */
+export const pickerTypes: FilePickerAcceptType[] = [
+  { description: "MIDI file", accept: { "audio/midi": [".mid", ".midi"] } },
+];
 
 /** parsed midi file data */
 export const midiAtom = atom<Midi | null>(null);
@@ -13,12 +20,19 @@ export const midiAtom = atom<Midi | null>(null);
 /** uploaded file */
 export const fileAtom = atom<File | null>(null);
 
-/** load file data */
-export const loadFile = async (file: File) => {
+/** uploaded file handle */
+export const handleAtom = atom<FileSystemFileHandle | null>(null);
+
+/** load file */
+export const load = async (
+  file: File,
+  handle: FileSystemFileHandle | null = null,
+) => {
   /** parse midi */
   const data = await file.arrayBuffer();
   const midi = new Midi(data);
-  console.debug(midi);
+
+  console.debug({ midi, file, handle });
 
   /** name fallback */
   if (!midi.name) midi.name = startCase(file.name.replace(/\.midi?$/, ""));
@@ -26,6 +40,7 @@ export const loadFile = async (file: File) => {
   /** set state */
   store.set(midiAtom, midi);
   store.set(fileAtom, file);
+  store.set(handleAtom, handle);
 
   /** init tracks state */
   store.set(
@@ -35,16 +50,38 @@ export const loadFile = async (file: File) => {
 };
 
 /** save file */
-export const saveFile = () => {
-  const file = store.get(fileAtom);
+export const save = async () => {
+  /** data to save */
   const humanized = store.get(humanizedAtom);
-  if (!humanized) return;
-  downloadData(humanized.toArray(), file?.name || "output.mid", "audio/midi");
+  if (!humanized) return false;
+
+  /** save new file */
+  const picked = await saveFile(
+    humanized.toArray() as BlobPart,
+    store.get(handleAtom) || undefined,
+    store.get(fileAtom)?.name || "output.mid",
+    pickerTypes,
+    mimeType,
+  );
+
+  /** user canceled */
+  if (!picked) return null;
+
+  const { file, handle } = picked;
+
+  console.debug({ file, handle });
+
+  /** update state */
+  if (file) store.set(fileAtom, file);
+  if (handle) store.set(handleAtom, handle);
+
+  /** success state */
+  return !!file;
 };
 
 /** load sample file */
 window.fetch(sample).then(async (response) => {
-  loadFile(new File([await response.arrayBuffer()], "sample.mid"));
+  load(new File([await response.arrayBuffer()], "sample.mid"));
 });
 
 /** defaults for reset-able fields */

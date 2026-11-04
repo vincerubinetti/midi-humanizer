@@ -10,12 +10,12 @@ export default function Velocity() {
   return (
     <fieldset>
       <legend>Velocities</legend>
-      <Tooltip content="Max amount to shift velocities up/down randomly.">
+      <Tooltip content="Max amount to shift velocities randomly, in steps.">
         <Range
           label="Rand."
-          min={-1}
-          max={1}
-          step={0.01}
+          min={-127}
+          max={127}
+          step={1}
           value={velocity.randomness}
           defaultValue={defaults.velocity.randomness}
           onChange={(value) =>
@@ -40,12 +40,12 @@ export default function Velocity() {
           }
         />
       </Tooltip>
-      <Tooltip content="How much to shift all velocities up/down.">
+      <Tooltip content="How much to shift all velocities, in steps.">
         <Range
           label="Shift"
-          min={-1}
-          max={1}
-          step={0.01}
+          min={-127}
+          max={127}
+          step={1}
           value={velocity.shift}
           defaultValue={defaults.velocity.shift}
           onChange={(value) =>
@@ -60,7 +60,7 @@ export default function Velocity() {
           label="Scale"
           min={0}
           max={2}
-          step={0.01}
+          step={0.1}
           value={velocity.scale}
           defaultValue={defaults.velocity.scale}
           onChange={(value) =>

@@ -349,12 +349,12 @@ export const humanizedAtom = atom((get) => {
         /** spread */
         (note.velocity +
           random(["velocity", index, velocity.seed], options.distribution) *
-            velocity.randomness +
+            (velocity.randomness / 127) +
           /** transform */
-          velocity.shift) *
+          velocity.shift / 127) *
         velocity.scale;
       /** limit */
-      note.velocity = clamp(note.velocity, 0, 1);
+      note.velocity = clamp(note.velocity, 1 / 127, 1);
     }
   }
 

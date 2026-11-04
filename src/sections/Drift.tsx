@@ -11,7 +11,7 @@ export default function Drift() {
     <fieldset>
       <legend>Drift</legend>
 
-      <Tooltip content="Max amount to drift starts left/right randomly, in ticks.">
+      <Tooltip content="Max amount to drift starts randomly, in ticks.">
         <Range
           label="Rand."
           min={-10}

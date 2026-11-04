@@ -10,7 +10,7 @@ export default function Duration() {
   return (
     <fieldset>
       <legend>Durations</legend>
-      <Tooltip content="Max amount to shift durations left/right randomly, in ticks.">
+      <Tooltip content="Max amount to shift durations randomly, in ticks.">
         <Range
           label="Rand."
           min={-10}
@@ -40,7 +40,7 @@ export default function Duration() {
           }
         />
       </Tooltip>
-      <Tooltip content="How much to shift all durations left/right, in ticks.">
+      <Tooltip content="How much to shift all durations, in ticks.">
         <Range
           label="Shift"
           min={-10}

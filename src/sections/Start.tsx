@@ -10,7 +10,7 @@ export default function Start() {
   return (
     <fieldset>
       <legend>Starts</legend>
-      <Tooltip content="Max amount to shift starts left/right randomly, in ticks.">
+      <Tooltip content="Max amount to shift starts randomly, in ticks.">
         <Range
           label="Rand."
           min={-10}
@@ -40,7 +40,7 @@ export default function Start() {
           }
         />
       </Tooltip>
-      <Tooltip content="How much to shift all starts left/right, in ticks.">
+      <Tooltip content="How much to shift all starts, in ticks.">
         <Range
           label="Shift"
           min={-10}

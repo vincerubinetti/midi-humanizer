@@ -1,18 +1,14 @@
-import type { ReactNode } from "react";
 import logo from "@/logo.svg";
+import File from "@/sections/File";
 
-type Props = {
-  children?: ReactNode;
-};
-
-export default function Header({ children }: Props) {
+export default function Header() {
   return (
-    <header className="flex items-center justify-center gap-8 bg-accent-light p-4 max-lg:flex-col">
-      <h1 className="flex grow items-center gap-4 text-xl">
+    <header className="flex items-center justify-between gap-8 bg-accent-light p-4 max-md:flex-col max-md:justify-center">
+      <h1 className="flex items-center gap-4 text-xl">
         <img src={logo} className="h-8" alt="" />
         MIDI Humanizer
       </h1>
-      {children}
+      <File className="justify-center max-lg:justify-end max-md:justify-center" />
     </header>
   );
 }

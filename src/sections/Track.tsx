@@ -1,11 +1,14 @@
 import { useAtom } from "jotai";
+import Checkbox from "@/components/Checkbox";
 import Select from "@/components/Select";
-import { midi, track } from "@/state";
+import Tooltip from "@/components/Tooltip";
+import { editAll, midi, reset, trackIndex } from "@/state";
 
 export default function Track() {
   /** global state */
   const [getMidi] = useAtom(midi);
-  const [getTrack, setTrack] = useAtom(track);
+  const [getTrackIndex, setTrackIndex] = useAtom(trackIndex);
+  const [getEditAll, setEditAll] = useAtom(editAll);
 
   if (!getMidi) return <></>;
 
@@ -16,13 +19,33 @@ export default function Track() {
   }));
 
   return (
-    <div className="grid grid-cols-[auto_auto]">
+    <fieldset className="col-span-full flex items-center gap-8">
+      <legend>Track</legend>
       <Select
-        label="Track"
         options={instruments}
-        value={String(getTrack)}
-        onChange={(value) => setTrack(Number(value))}
+        value={String(getTrackIndex)}
+        onChange={(value) => setTrackIndex(Number(value))}
+        aria-label="Track"
       />
-    </div>
+      <Tooltip content="Whether to update all tracks together. If on, editing a control sets value for all tracks, not just selected one.">
+        <Checkbox
+          className="flex!"
+          label="Edit all"
+          value={getEditAll}
+          onChange={setEditAll}
+        />
+      </Tooltip>
+      <Tooltip
+        content={
+          getEditAll
+            ? "Reset all parameters to defaults for all tracks."
+            : "Reset all parameters to defaults for this track."
+        }
+      >
+        <button className="w-40" onClick={reset}>
+          Reset
+        </button>
+      </Tooltip>
+    </fieldset>
   );
 }

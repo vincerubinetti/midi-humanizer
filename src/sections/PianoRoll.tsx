@@ -6,13 +6,13 @@ import Tooltip from "@/components/Tooltip";
 import {
   beatGuides,
   beatRange,
-  drift,
   driftCurve,
   humanized,
   midi,
   pitchGuides,
   pitchRange,
   track,
+  trackIndex,
 } from "@/state";
 import { useTransform } from "@/util/hooks";
 import { round } from "@/util/math";
@@ -33,8 +33,8 @@ export default function PianoRoll() {
 
   /** global state */
   const [getMidi] = useAtom(midi);
+  const [getTrackIndex] = useAtom(trackIndex);
   const [getTrack] = useAtom(track);
-  const [getDrift] = useAtom(drift);
   const [getDriftCurve] = useAtom(driftCurve);
   const [getPitchGuides] = useAtom(pitchGuides);
   const [getBeatGuides] = useAtom(beatGuides);
@@ -86,15 +86,17 @@ export default function PianoRoll() {
       [
         index === 0 ? "M" : "L",
         xScale(index),
-        (bottomPanelHeight / 2) * (1 - (getDrift.amount * value) / 10),
+        (bottomPanelHeight / 2) * (1 - (getTrack.drift.amount * value) / 10),
       ].join(" "),
     )
     .join(" ");
 
   /** get notes */
-  const originalNotes = getMidi ? getMidi.tracks[getTrack]?.notes || [] : [];
+  const originalNotes = getMidi
+    ? getMidi.tracks[getTrackIndex]?.notes || []
+    : [];
   const humanizedNotes = getHumanized
-    ? getHumanized.tracks[getTrack]?.notes || []
+    ? getHumanized.tracks[getTrackIndex]?.notes || []
     : [];
 
   return (

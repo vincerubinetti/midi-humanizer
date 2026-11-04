@@ -1,10 +1,12 @@
 import { useAtom } from "jotai";
 import Range from "@/components/Range";
 import Tooltip from "@/components/Tooltip";
-import { defaults, start } from "@/state";
+import { defaults, setTrack, track } from "@/state";
 
 export default function Start() {
-  const [get, set] = useAtom(start);
+  /** global state */
+  const [getTrack] = useAtom(track);
+  const get = getTrack.start;
 
   return (
     <fieldset>
@@ -18,7 +20,9 @@ export default function Start() {
           value={get.randomness}
           defaultValue={defaults.start.randomness}
           onChange={(value) =>
-            set((state) => ({ ...state, randomness: value }))
+            setTrack((track) => {
+              track.start.randomness = value;
+            })
           }
         />
       </Tooltip>
@@ -30,7 +34,11 @@ export default function Start() {
           step={1}
           value={get.seed}
           defaultValue={defaults.start.seed}
-          onChange={(value) => set((state) => ({ ...state, seed: value }))}
+          onChange={(value) =>
+            setTrack((track) => {
+              track.start.seed = value;
+            })
+          }
         />
       </Tooltip>
       <Tooltip content="How much to shift all note starts left/right, in ticks.">
@@ -41,7 +49,11 @@ export default function Start() {
           step={1}
           value={get.shift}
           defaultValue={defaults.start.shift}
-          onChange={(value) => set((state) => ({ ...state, shift: value }))}
+          onChange={(value) =>
+            setTrack((track) => {
+              track.start.shift = value;
+            })
+          }
         />
       </Tooltip>
     </fieldset>

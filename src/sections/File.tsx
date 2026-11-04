@@ -9,7 +9,7 @@ import Tooltip from "@/components/Tooltip";
 import { filename, humanized, midi } from "@/state";
 import { downloadData } from "@/util/file";
 
-export default function File() {
+export default function File({ className = "" }) {
   /** global state */
   const [getMidi, setMidi] = useAtom(midi);
   const [getFilename, setFilename] = useAtom(filename);
@@ -58,7 +58,7 @@ export default function File() {
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-4">
+    <div className={clsx("flex flex-wrap items-center gap-4", className)}>
       <input
         ref={input}
         onChange={(event) => {

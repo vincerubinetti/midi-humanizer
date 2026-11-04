@@ -1,5 +1,6 @@
 import type { ComponentProps, ReactNode } from "react";
 import { Slider } from "@base-ui/react";
+import clsx from "clsx";
 
 type Props = {
   label: ReactNode;
@@ -19,12 +20,16 @@ export default function Range({
   value,
   defaultValue,
   onChange,
+  className,
   ...props
 }: Props) {
   return (
     <label
       {...props}
-      className="group relative isolate col-span-full grid grid-cols-subgrid items-center gap-2"
+      className={clsx(
+        "group relative isolate col-span-full grid grid-cols-subgrid items-center gap-2",
+        className,
+      )}
       onDoubleClick={() => onChange(defaultValue)}
     >
       {label}

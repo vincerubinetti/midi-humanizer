@@ -6,6 +6,19 @@ import { atomWithStorage } from "jotai/utils";
 import { clamp, range } from "lodash";
 import { random } from "@/util/math";
 
+/** parsed midi file data */
+export const midi = atom<Midi | null>(null);
+
+/** filename of uploaded file */
+export const filename = atom("");
+
+/** load sample */
+Midi.fromUrl("sample.mid").then((parsed) => {
+  console.info(parsed);
+  store.set(filename, "sample.mid");
+  store.set(midi, parsed);
+});
+
 /** defaults for reset-able fields */
 export const defaults = {
   start: { randomness: 0, seed: 0, shift: 0 },
@@ -21,18 +34,47 @@ export const defaults = {
   },
 };
 
-/** parsed midi file data */
-export const midi = atom<Midi | null>(null);
+export type Track = typeof defaults;
+
+/** parameters for each track */
+export const tracks = atomWithStorage<Track[]>("tracks", []);
 
 /** selected track index */
-export const track = atom(0);
+export const trackIndex = atom(0);
 
-/** filename of uploaded file */
-export const filename = atom("");
+/** (derived) selected track */
+export const track = atom((get) => get(tracks)[get(trackIndex)] ?? defaults);
+
+/** whether editing a control updates all tracks */
+export const editAll = atom(false);
+
+/** (derived) index to use for track editing */
+export const editIndex = atom((get) => (get(editAll) ? -1 : get(trackIndex)));
+
+/** set track(s) value */
+export const setTrack = (mutate: (track: Track) => void | Track) =>
+  store.set(tracks, (tracks) => {
+    /** which tracks to set value on */
+    const indices = store.get(editAll)
+      ? range(tracks.length)
+      : [store.get(editIndex)];
+    /** clone for mutating */
+    tracks = window.structuredClone(tracks);
+    /** run mutation function */
+    for (const index of indices)
+      if (tracks[index]) {
+        const newTrack = mutate(tracks[index]);
+        if (newTrack !== undefined) tracks[index] = newTrack;
+      }
+    return tracks;
+  });
+
+/** reset parameters of track at index to defaults */
+export const reset = () => setTrack(() => defaults);
 
 /** (derived) lowest/highest pitch of current track */
 export const pitchRange = atom((get) => {
-  const currentTrack = get(midi)?.tracks[get(track)];
+  const currentTrack = get(midi)?.tracks[get(trackIndex)];
   if (!currentTrack) return { min: 0, max: 127 };
   let min = 127;
   let max = 0;
@@ -45,7 +87,7 @@ export const pitchRange = atom((get) => {
 
 /** (derived) earliest/latest note of current track */
 export const beatRange = atom((get) => {
-  const currentTrack = get(midi)?.tracks[get(track)];
+  const currentTrack = get(midi)?.tracks[get(trackIndex)];
   if (!currentTrack) return { min: 0, max: 96 * 16 };
   let min = Infinity;
   let max = -Infinity;
@@ -56,13 +98,6 @@ export const beatRange = atom((get) => {
   }
   return { min, max };
 });
-
-/** parameters */
-export const start = atomWithStorage("start", { ...defaults.start });
-export const drift = atomWithStorage("drift", { ...defaults.drift });
-export const duration = atomWithStorage("duration", { ...defaults.duration });
-export const velocity = atomWithStorage("velocity", { ...defaults.velocity });
-export const options = atomWithStorage("options", { ...defaults.options });
 
 /** (derived) horizontal pitch guides */
 export const pitchGuides = atom((get) =>
@@ -82,7 +117,7 @@ export const beatGuides = atom((get) => {
   const durationTicks = get(midi)?.durationTicks || ppq * 16;
 
   /** beat sub divisions */
-  const subs = range(0, ppq, ppq / get(options).grid);
+  const subs = range(0, ppq, ppq / get(track).options.grid);
 
   /** create beats */
   for (let tick = 0; tick < durationTicks; tick += ppq) {
@@ -102,22 +137,22 @@ export const beatGuides = atom((get) => {
   return beatGuides;
 });
 
-/** (derived) drift curve */
-export const driftCurve = atom((get) => {
-  const durationTicks = get(midi)?.durationTicks || 0;
-
+/** drift curve for given track parameters */
+const makeDriftCurve = (
+  durationTicks: number,
+  drift: Track["drift"],
+  distribution: string,
+) => {
   /** list of ticks */
   const ticks = [];
   /** list of corresponding drift values */
   const values = [];
 
   /** generate random point every certain amount of ticks */
-  const step = clamp(get(drift).step, 1, durationTicks);
+  const step = clamp(drift.step, 1, durationTicks);
   for (let tick = 0; tick <= durationTicks; tick += step) {
     ticks.push(tick);
-    values.push(
-      random(["drift", tick, get(drift).seed], get(options).distribution),
-    );
+    values.push(random(["drift", tick, drift.seed], distribution));
   }
 
   /** create step wise interpolator between sparse points */
@@ -133,31 +168,47 @@ export const driftCurve = atom((get) => {
 
   /** interpolate for each tick */
   return range(durationTicks).map((_, index) => scale(index));
-});
+};
+
+/** (derived) drift curve of selected track */
+export const driftCurve = atom((get) =>
+  makeDriftCurve(
+    get(midi)?.durationTicks || 0,
+    get(track).drift,
+    get(track).options.distribution,
+  ),
+);
 
 /** (derived) humanized midi data*/
 export const humanized = atom((get) => {
   /** deep clone to avoid altering original midi */
   const humanizedMidi = get(midi)?.clone();
-
   if (!humanizedMidi) return;
 
   /** go through each track */
-  for (const track of humanizedMidi.tracks) {
+  for (const [trackIndex, track] of humanizedMidi.tracks.entries()) {
+    /** get track params */
+    const { start, drift, duration, velocity, options } =
+      get(tracks)[trackIndex] ?? defaults;
+
+    /** make drift curve for track */
+    const curve = makeDriftCurve(
+      get(midi)?.durationTicks || 0,
+      drift,
+      options.distribution,
+    );
+
     /** randomize start time */
     for (const note of track.notes) {
       note.ticks =
         note.ticks +
         /** spread */
-        random(
-          ["start", note.ticks, get(start).seed],
-          get(options).distribution,
-        ) *
-          get(start).randomness +
+        random(["start", note.ticks, start.seed], options.distribution) *
+          start.randomness +
         /** drift */
-        (get(driftCurve)[note.ticks] || 0) * get(drift).amount +
+        (curve[note.ticks] || 0) * drift.amount +
         /** transform */
-        get(start).shift;
+        start.shift;
       /** to int */
       note.ticks = Math.round(note.ticks);
       /** limit */
@@ -176,13 +227,13 @@ export const humanized = atom((get) => {
           /** make sure not simultaneous */
           other.ticks > note.ticks &&
           /** check pitches */
-          (other.midi === note.midi || !get(options).polyphonic),
+          (other.midi === note.midi || !options.polyphonic),
       );
       if (nextNote) nextNotes.set(note, nextNote);
     }
 
     /** legato-ize */
-    if (get(options).legato)
+    if (options.legato)
       for (const note of track.notes) {
         /** lookup next note... */
         const nextNote = nextNotes.get(note);
@@ -200,13 +251,13 @@ export const humanized = atom((get) => {
         (note.durationTicks +
           /** spread */
           random(
-            ["duration", note.ticks, get(duration).seed],
-            get(options).distribution,
+            ["duration", note.ticks, duration.seed],
+            options.distribution,
           ) *
-            get(duration).randomness +
+            duration.randomness +
           /** transform */
-          get(duration).shift) *
-          get(duration).scale,
+          duration.shift) *
+          duration.scale,
       );
 
     /** enforce gaps */
@@ -216,8 +267,8 @@ export const humanized = atom((get) => {
       /** where next note starts */
       const nextTicks = nextNote?.ticks || get(midi)?.durationTicks || 0;
       /** limit overlap */
-      if (note.ticks + note.durationTicks + get(options).gap >= nextTicks)
-        note.durationTicks = nextTicks - note.ticks - get(options).gap;
+      if (note.ticks + note.durationTicks + options.gap >= nextTicks)
+        note.durationTicks = nextTicks - note.ticks - options.gap;
       /** limit */
       note.durationTicks = clamp(
         note.durationTicks,
@@ -232,13 +283,13 @@ export const humanized = atom((get) => {
         /** spread */
         (note.velocity +
           random(
-            ["velocity", note.ticks, get(velocity).seed],
-            get(options).distribution,
+            ["velocity", note.ticks, velocity.seed],
+            options.distribution,
           ) *
-            get(velocity).randomness +
+            velocity.randomness +
           /** transform */
-          get(velocity).shift) *
-        get(velocity).scale;
+          velocity.shift) *
+        velocity.scale;
       /** limit */
       note.velocity = clamp(note.velocity, 0, 1);
     }
@@ -253,19 +304,3 @@ export const humanized = atom((get) => {
 
 /** singleton store instance to access state outside of react */
 const store = getDefaultStore();
-
-/** reset parameters to defaults */
-export const reset = () => {
-  store.set(start, { ...defaults.start });
-  store.set(drift, { ...defaults.drift });
-  store.set(duration, { ...defaults.duration });
-  store.set(velocity, { ...defaults.velocity });
-  store.set(options, { ...defaults.options });
-};
-
-/** load sample */
-Midi.fromUrl("sample.mid").then((parsed) => {
-  console.info(parsed);
-  store.set(filename, "sample.mid");
-  store.set(midi, parsed);
-});

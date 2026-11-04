@@ -1,10 +1,12 @@
 import { useAtom } from "jotai";
 import Range from "@/components/Range";
 import Tooltip from "@/components/Tooltip";
-import { defaults, drift } from "@/state";
+import { defaults, setTrack, track } from "@/state";
 
 export default function Drift() {
-  const [get, set] = useAtom(drift);
+  /** global state */
+  const [getTrack] = useAtom(track);
+  const get = getTrack.drift;
 
   return (
     <fieldset>
@@ -18,7 +20,11 @@ export default function Drift() {
           step={1}
           value={get.amount}
           defaultValue={defaults.drift.amount}
-          onChange={(value) => set((state) => ({ ...state, amount: value }))}
+          onChange={(value) =>
+            setTrack((track) => {
+              track.drift.amount = value;
+            })
+          }
         />
       </Tooltip>
       <Tooltip content="Unique character of drift randomness.">
@@ -29,7 +35,11 @@ export default function Drift() {
           step={1}
           value={get.seed}
           defaultValue={defaults.drift.seed}
-          onChange={(value) => set((state) => ({ ...state, seed: value }))}
+          onChange={(value) =>
+            setTrack((track) => {
+              track.drift.seed = value;
+            })
+          }
         />
       </Tooltip>
       <Tooltip content="Start drifting toward new value every this number of ticks. Lower = faster, higher = slower.">
@@ -40,7 +50,11 @@ export default function Drift() {
           step={1}
           value={get.step}
           defaultValue={defaults.drift.step}
-          onChange={(value) => set((state) => ({ ...state, step: value }))}
+          onChange={(value) =>
+            setTrack((track) => {
+              track.drift.step = value;
+            })
+          }
         />
       </Tooltip>
     </fieldset>

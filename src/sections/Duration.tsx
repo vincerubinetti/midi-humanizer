@@ -1,10 +1,12 @@
 import { useAtom } from "jotai";
 import Range from "@/components/Range";
 import Tooltip from "@/components/Tooltip";
-import { defaults, duration } from "@/state";
+import { defaults, setTrack, track } from "@/state";
 
 export default function Duration() {
-  const [get, set] = useAtom(duration);
+  /** global state */
+  const [getTrack] = useAtom(track);
+  const get = getTrack.duration;
 
   return (
     <fieldset>
@@ -18,7 +20,9 @@ export default function Duration() {
           value={get.randomness}
           defaultValue={defaults.duration.randomness}
           onChange={(value) =>
-            set((state) => ({ ...state, randomness: value }))
+            setTrack((track) => {
+              track.duration.randomness = value;
+            })
           }
         />
       </Tooltip>
@@ -30,7 +34,11 @@ export default function Duration() {
           step={1}
           value={get.seed}
           defaultValue={defaults.duration.seed}
-          onChange={(value) => set((state) => ({ ...state, seed: value }))}
+          onChange={(value) =>
+            setTrack((track) => {
+              track.duration.seed = value;
+            })
+          }
         />
       </Tooltip>
       <Tooltip content="How much to shift all note durations left/right, in ticks.">
@@ -41,7 +49,11 @@ export default function Duration() {
           step={1}
           value={get.shift}
           defaultValue={defaults.duration.shift}
-          onChange={(value) => set((state) => ({ ...state, shift: value }))}
+          onChange={(value) =>
+            setTrack((track) => {
+              track.duration.shift = value;
+            })
+          }
         />
       </Tooltip>
       <Tooltip content="How much to scale all note starts, as multiplier.">
@@ -52,7 +64,11 @@ export default function Duration() {
           step={0.01}
           value={get.scale}
           defaultValue={defaults.duration.scale}
-          onChange={(value) => set((state) => ({ ...state, scale: value }))}
+          onChange={(value) =>
+            setTrack((track) => {
+              track.duration.scale = value;
+            })
+          }
         />
       </Tooltip>
     </fieldset>

@@ -1,10 +1,12 @@
 import { useAtom } from "jotai";
 import Range from "@/components/Range";
 import Tooltip from "@/components/Tooltip";
-import { defaults, velocity } from "@/state";
+import { defaults, setTrack, track } from "@/state";
 
 export default function Velocity() {
-  const [get, set] = useAtom(velocity);
+  /** global state */
+  const [getTrack] = useAtom(track);
+  const get = getTrack.velocity;
 
   return (
     <fieldset>
@@ -18,7 +20,9 @@ export default function Velocity() {
           value={get.randomness}
           defaultValue={defaults.velocity.randomness}
           onChange={(value) =>
-            set((state) => ({ ...state, randomness: value }))
+            setTrack((track) => {
+              track.velocity.randomness = value;
+            })
           }
         />
       </Tooltip>
@@ -30,7 +34,11 @@ export default function Velocity() {
           step={1}
           value={get.seed}
           defaultValue={defaults.velocity.seed}
-          onChange={(value) => set((state) => ({ ...state, seed: value }))}
+          onChange={(value) =>
+            setTrack((track) => {
+              track.velocity.seed = value;
+            })
+          }
         />
       </Tooltip>
       <Tooltip content="How much to shift all note velocities up/down, in range of 0-1.">
@@ -41,7 +49,11 @@ export default function Velocity() {
           step={0.01}
           value={get.shift}
           defaultValue={defaults.velocity.shift}
-          onChange={(value) => set((state) => ({ ...state, shift: value }))}
+          onChange={(value) =>
+            setTrack((track) => {
+              track.velocity.shift = value;
+            })
+          }
         />
       </Tooltip>
       <Tooltip content="How much to scale all note velocities, as multiplier.">
@@ -52,7 +64,11 @@ export default function Velocity() {
           step={0.01}
           value={get.scale}
           defaultValue={defaults.velocity.scale}
-          onChange={(value) => set((state) => ({ ...state, scale: value }))}
+          onChange={(value) =>
+            setTrack((track) => {
+              track.velocity.scale = value;
+            })
+          }
         />
       </Tooltip>
     </fieldset>

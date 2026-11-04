@@ -1,10 +1,9 @@
 import type { ComponentProps, ReactNode } from "react";
-import { useRef } from "react";
-import { useEventListener } from "@reactuses/core";
+import clsx from "clsx";
 import { clamp } from "lodash";
 
 type Props = {
-  label: ReactNode;
+  label?: ReactNode;
   options: { value: string; label: string }[];
   value: string;
   onChange: (value: string) => void;
@@ -15,16 +14,20 @@ export default function Select({
   options,
   value,
   onChange,
+  className,
   ...props
 }: Props) {
   return (
     <label
-      className="group col-span-full grid cursor-pointer grid-cols-subgrid items-center gap-2 rounded-md"
+      className={clsx(
+        "group col-span-full grid cursor-pointer grid-cols-subgrid items-center gap-2 rounded-md",
+        className,
+      )}
       {...props}
     >
       {label}
       <select
-        className="col-start-2 -col-end-1 flex cursor-pointer appearance-none items-center justify-center rounded-md bg-accent p-2 text-white hover:bg-black"
+        className="col-span-2 flex cursor-pointer appearance-none items-center justify-center rounded-md bg-accent p-2 text-white hover:bg-black"
         value={value}
         onChange={({ target }) => onChange(target.value)}
         onKeyDown={({ key }) => {

@@ -3,7 +3,8 @@ import { Midi } from "@tonejs/midi";
 import * as d3 from "d3";
 import { atom, getDefaultStore } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { clamp, range } from "lodash";
+import { clamp, range, startCase } from "lodash";
+import sample from "@/assets/sample.mid?url";
 import { random } from "@/util/math";
 
 /** parsed midi file data */
@@ -12,11 +13,29 @@ export const midi = atom<Midi | null>(null);
 /** filename of uploaded file */
 export const filename = atom("");
 
-/** load sample */
-Midi.fromUrl("sample.mid").then((parsed) => {
-  console.info(parsed);
-  store.set(filename, "sample.mid");
-  store.set(midi, parsed);
+/** load midi data */
+export const loadMidi = (data: ArrayBuffer, fileName: string) => {
+  /** parse midi */
+  const newMidi = new Midi(data);
+  console.debug(newMidi);
+
+  /** name fallback */
+  if (!newMidi.name) newMidi.name = startCase(fileName.replace(/\.midi?$/, ""));
+
+  /** set state */
+  store.set(midi, newMidi);
+  store.set(filename, fileName);
+
+  /** init tracks state */
+  store.set(
+    tracks,
+    newMidi.tracks.map(() => window.structuredClone(defaults)),
+  );
+};
+
+/** load sample file */
+window.fetch(sample).then(async (response) => {
+  loadMidi(await response.arrayBuffer(), "sample.mid");
 });
 
 /** defaults for reset-able fields */

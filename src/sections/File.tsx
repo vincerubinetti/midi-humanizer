@@ -6,7 +6,7 @@ import clsx from "clsx";
 import { useAtom } from "jotai";
 import { startCase } from "lodash";
 import Tooltip from "@/components/Tooltip";
-import { filename, humanized, midi } from "@/state";
+import { filename, humanized, loadMidi, midi } from "@/state";
 import { downloadData } from "@/util/file";
 
 export default function File({ className = "" }) {
@@ -25,14 +25,8 @@ export default function File({ className = "" }) {
       /** get data from file upload */
       const data = (await file.arrayBuffer()) || "";
 
-      /** parse midi */
-      const midi = new Midi(data);
-      console.debug(midi);
-
-      /** set state data */
-      if (!midi.name) midi.name = startCase(file.name.replace(/\.midi?$/, ""));
-      setMidi(midi);
-      setFilename(file.name);
+      /** load into state */
+      loadMidi(data, file.name);
     } catch (error) {
       console.error(error);
     }

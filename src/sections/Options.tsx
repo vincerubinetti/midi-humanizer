@@ -28,7 +28,7 @@ export default function Options() {
           }
         />
       </Tooltip>
-      <Tooltip content="Minimum amount of gap to leave between each note and next note, in ticks.">
+      <Tooltip content="Minimum amount of gap to leave between notes, in ticks.">
         <Range
           label="Gap"
           min={0}
@@ -43,7 +43,7 @@ export default function Options() {
           }
         />
       </Tooltip>
-      <Tooltip content="Whether to extend each note to next note, before randomizing.">
+      <Tooltip content="Whether to extend each note to next note before randomizing.">
         <Checkbox
           label="Legato"
           value={get.legato}
@@ -54,7 +54,7 @@ export default function Options() {
           }
         />
       </Tooltip>
-      <Tooltip content='Whether to treat notes as polyphonic. If on, "next note" in "Gap" and "Legato" options means next note of same pitch. If off, it means very next note in time, regardless of pitch.'>
+      <Tooltip content='Whether to treat notes as polyphonic. If on, "next note" in "Gap" and "Legato" options means next note of same pitch. If off, it means next note in time, regardless of pitch.'>
         <Checkbox
           label="Poly."
           value={get.polyphonic}
@@ -65,7 +65,7 @@ export default function Options() {
           }
         />
       </Tooltip>
-      <Tooltip content='How to distribute randomness. "Uniform" means evenly from -100% to 100%, "triangular" means more likely to be near 0%.'>
+      <Tooltip content="How to distribute randomness. Uniform = evenly from -100% to 100%, triangular = more likely to be near 0%.">
         <Select
           label="Dist."
           options={[

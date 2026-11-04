@@ -1,18 +1,16 @@
 import type { DragEventHandler } from "react";
 import { useRef, useState } from "react";
 import { useEventListener } from "@reactuses/core";
-import { Midi } from "@tonejs/midi";
 import clsx from "clsx";
 import { useAtom } from "jotai";
-import { startCase } from "lodash";
 import Tooltip from "@/components/Tooltip";
 import { filename, humanized, loadMidi, midi } from "@/state";
 import { downloadData } from "@/util/file";
 
 export default function File({ className = "" }) {
   /** global state */
-  const [getMidi, setMidi] = useAtom(midi);
-  const [getFilename, setFilename] = useAtom(filename);
+  const [getMidi] = useAtom(midi);
+  const [getFilename] = useAtom(filename);
   const [getHumanized] = useAtom(humanized);
 
   /** local state */

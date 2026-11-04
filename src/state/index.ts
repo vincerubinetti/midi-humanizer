@@ -55,7 +55,7 @@ export const defaults = {
 
 export type Track = typeof defaults;
 
-/** parameters for each track */
+/** params for each track */
 export const tracks = atomWithStorage<Track[]>("tracks", []);
 
 /** selected track index */
@@ -88,7 +88,7 @@ export const setTrack = (mutate: (track: Track) => void | Track) =>
     return tracks;
   });
 
-/** reset parameters of track at index to defaults */
+/** reset params of track at index to defaults */
 export const reset = () => setTrack(() => defaults);
 
 /** (derived) lowest/highest pitch of current track */
@@ -156,7 +156,7 @@ export const beatGuides = atom((get) => {
   return beatGuides;
 });
 
-/** drift curve for given track parameters */
+/** drift curve for given track params */
 const makeDriftCurve = (
   durationTicks: number,
   drift: Track["drift"],
@@ -171,7 +171,7 @@ const makeDriftCurve = (
   const step = clamp(drift.step, 1, durationTicks);
   for (let tick = 0; tick <= durationTicks; tick += step) {
     ticks.push(tick);
-    values.push(random(["drift", tick, drift.seed], distribution));
+    values.push(random(["drift", tick / step, drift.seed], distribution));
   }
 
   /** create step wise interpolator between sparse points */
@@ -218,11 +218,11 @@ export const humanized = atom((get) => {
     );
 
     /** randomize start time */
-    for (const note of track.notes) {
+    for (const [index, note] of track.notes.entries()) {
       note.ticks =
         note.ticks +
         /** spread */
-        random(["start", note.ticks, start.seed], options.distribution) *
+        random(["start", index, start.seed], options.distribution) *
           start.randomness +
         /** drift */
         (curve[note.ticks] || 0) * drift.amount +
@@ -265,14 +265,11 @@ export const humanized = atom((get) => {
       }
 
     /** randomize duration */
-    for (const note of track.notes)
+    for (const [index, note] of track.notes.entries())
       note.durationTicks = Math.round(
         (note.durationTicks +
           /** spread */
-          random(
-            ["duration", note.ticks, duration.seed],
-            options.distribution,
-          ) *
+          random(["duration", index, duration.seed], options.distribution) *
             duration.randomness +
           /** transform */
           duration.shift) *
@@ -297,14 +294,11 @@ export const humanized = atom((get) => {
     }
 
     /** randomize velocity */
-    for (const note of track.notes) {
+    for (const [index, note] of track.notes.entries()) {
       note.velocity =
         /** spread */
         (note.velocity +
-          random(
-            ["velocity", note.ticks, velocity.seed],
-            options.distribution,
-          ) *
+          random(["velocity", index, velocity.seed], options.distribution) *
             velocity.randomness +
           /** transform */
           velocity.shift) *

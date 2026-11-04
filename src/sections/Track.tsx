@@ -38,8 +38,8 @@ export default function Track() {
       <Tooltip
         content={
           getEditAll
-            ? "Reset all parameters to defaults for all tracks."
-            : "Reset all parameters to defaults for this track."
+            ? "Reset values to defaults for all tracks."
+            : "Reset values to defaults for this track."
         }
       >
         <button className="w-40" onClick={reset}>

@@ -11,10 +11,10 @@ export default function Start() {
   return (
     <fieldset>
       <legend>Starts</legend>
-      <Tooltip content="Amount of randomness. Max amount to shift note starts left/right, in ticks.">
+      <Tooltip content="Max amount to shift starts left/right randomly, in ticks.">
         <Range
           label="Rand."
-          min={0}
+          min={-10}
           max={10}
           step={1}
           value={get.randomness}
@@ -26,7 +26,7 @@ export default function Start() {
           }
         />
       </Tooltip>
-      <Tooltip content="Unique character of note start randomness.">
+      <Tooltip content="Unique character of randomness.">
         <Range
           label="Seed"
           min={0}
@@ -41,7 +41,7 @@ export default function Start() {
           }
         />
       </Tooltip>
-      <Tooltip content="How much to shift all note starts left/right, in ticks.">
+      <Tooltip content="How much to shift all starts left/right, in ticks.">
         <Range
           label="Shift"
           min={-10}

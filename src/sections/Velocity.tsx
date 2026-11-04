@@ -11,11 +11,11 @@ export default function Velocity() {
   return (
     <fieldset>
       <legend>Velocities</legend>
-      <Tooltip content="Amount of randomness. Max amount to shift note velocities up/down, in range of 0-1.">
+      <Tooltip content="Max amount to shift velocities up/down randomly.">
         <Range
           label="Rand."
-          min={0}
-          max={0.5}
+          min={-1}
+          max={1}
           step={0.01}
           value={get.randomness}
           defaultValue={defaults.velocity.randomness}
@@ -26,7 +26,7 @@ export default function Velocity() {
           }
         />
       </Tooltip>
-      <Tooltip content="Unique character of velocity randomness.">
+      <Tooltip content="Unique character of randomness.">
         <Range
           label="Seed"
           min={0}
@@ -41,7 +41,7 @@ export default function Velocity() {
           }
         />
       </Tooltip>
-      <Tooltip content="How much to shift all note velocities up/down, in range of 0-1.">
+      <Tooltip content="How much to shift all velocities up/down.">
         <Range
           label="Shift"
           min={-1}
@@ -56,7 +56,7 @@ export default function Velocity() {
           }
         />
       </Tooltip>
-      <Tooltip content="How much to scale all note velocities, as multiplier.">
+      <Tooltip content="How much to multiply all velocities.">
         <Range
           label="Scale"
           min={0}

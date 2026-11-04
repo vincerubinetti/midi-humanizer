@@ -11,10 +11,10 @@ export default function Duration() {
   return (
     <fieldset>
       <legend>Durations</legend>
-      <Tooltip content="Amount of randomness. Max amount to shift note durations left/right, in ticks.">
+      <Tooltip content="Max amount to shift durations left/right randomly, in ticks.">
         <Range
           label="Rand."
-          min={0}
+          min={-10}
           max={10}
           step={1}
           value={get.randomness}
@@ -26,7 +26,7 @@ export default function Duration() {
           }
         />
       </Tooltip>
-      <Tooltip content="Unique character of duration randomness.">
+      <Tooltip content="Unique character of randomness.">
         <Range
           label="Seed"
           min={0}
@@ -41,7 +41,7 @@ export default function Duration() {
           }
         />
       </Tooltip>
-      <Tooltip content="How much to shift all note durations left/right, in ticks.">
+      <Tooltip content="How much to shift all durations left/right, in ticks.">
         <Range
           label="Shift"
           min={-10}
@@ -56,7 +56,7 @@ export default function Duration() {
           }
         />
       </Tooltip>
-      <Tooltip content="How much to scale all note starts, as multiplier.">
+      <Tooltip content="How much to multiply all durations.">
         <Range
           label="Scale"
           min={0}

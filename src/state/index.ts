@@ -261,11 +261,13 @@ export const humanizedAtom = atom((get) => {
       get(tracksAtom)[trackIndex] ?? defaults;
 
     /** make drift curve for track */
-    const curve = makeDriftCurve(
-      get(midiAtom)?.durationTicks || 0,
-      drift,
-      options.distribution,
-    );
+    const driftCurve = drift.amount
+      ? makeDriftCurve(
+          get(midiAtom)?.durationTicks || 0,
+          drift,
+          options.distribution,
+        )
+      : [];
 
     /** randomize start time */
     for (const [index, note] of track.notes.entries()) {
@@ -275,7 +277,7 @@ export const humanizedAtom = atom((get) => {
         random(["start", index, start.seed], options.distribution) *
           start.randomness +
         /** drift */
-        (curve[note.ticks] || 0) * drift.amount +
+        (driftCurve[note.ticks] || 0) * drift.amount +
         /** transform */
         start.shift;
       /** to int */

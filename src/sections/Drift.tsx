@@ -13,7 +13,7 @@ export default function Drift() {
     <fieldset>
       <legend>Drift</legend>
 
-      <Tooltip content="Max amount to drift starts randomly, in ticks.">
+      <Tooltip content="Max amount to drift randomly, in ticks.">
         <Range
           label="Rand."
           min={-ppq / 4}
@@ -43,7 +43,7 @@ export default function Drift() {
           }
         />
       </Tooltip>
-      <Tooltip content="Start drifting toward new value every this many of ticks. Lower = faster, higher = slower.">
+      <Tooltip content="Start drifting toward new value every this many of ticks.">
         <Range
           label="Step"
           min={ppq / 2}

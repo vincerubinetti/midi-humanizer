@@ -130,7 +130,7 @@ export const editIndexAtom = atom((get) =>
 );
 
 /** set track(s) value */
-export const setTrack = (mutate: (track: Params) => void) =>
+export const setTrack = (mutate: (track: Params) => void | Params) =>
   store.set(tracksAtom, (tracks) => {
     /** which tracks to set value on */
     const indices = store.get(editAllAtom)
@@ -139,7 +139,11 @@ export const setTrack = (mutate: (track: Params) => void) =>
     /** clone for mutating */
     tracks = window.structuredClone(tracks);
     /** run mutation function */
-    for (const index of indices) if (tracks[index]) mutate(tracks[index]);
+    for (const index of indices)
+      if (tracks[index]) {
+        const result = mutate(tracks[index]);
+        if (result) tracks[index] = result;
+      }
     return tracks;
   });
 
@@ -313,20 +317,22 @@ export const humanizedAtom = atom((get) => {
       );
 
     /** enforce gaps */
-    for (const note of track.notes) {
-      /** lookup next note... */
-      const nextNote = nextNotes.get(note);
-      /** where next note starts */
-      const nextTicks = nextNote?.ticks || get(durationAtom);
-      /** limit overlap */
-      if (note.ticks + note.durationTicks + options.gap >= nextTicks)
-        note.durationTicks = nextTicks - note.ticks - options.gap;
-      /** limit */
-      note.durationTicks = clamp(
-        note.durationTicks,
-        0,
-        get(durationAtom) - note.ticks,
-      );
+    if (options.gap >= 0) {
+      for (const note of track.notes) {
+        /** lookup next note... */
+        const nextNote = nextNotes.get(note);
+        /** where next note starts */
+        const nextTicks = nextNote?.ticks || get(durationAtom);
+        /** limit overlap */
+        if (note.ticks + note.durationTicks + options.gap >= nextTicks)
+          note.durationTicks = nextTicks - note.ticks - options.gap;
+        /** limit */
+        note.durationTicks = clamp(
+          note.durationTicks,
+          0,
+          get(durationAtom) - note.ticks,
+        );
+      }
     }
 
     /** randomize velocity */

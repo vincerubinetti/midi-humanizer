@@ -169,8 +169,6 @@ export default function PianoRoll() {
 
   /** draw */
   useLayoutEffect(() => {
-    console.time("a");
-
     /** common values */
     const timeLeft = timeScale(0);
     const timeRight = timeScale(width);
@@ -199,7 +197,6 @@ export default function PianoRoll() {
       }
 
       /* vertical beat guides */
-      ctx.strokeStyle = gray;
       for (const beat of beatGuides) {
         const x = timeScale(beat.left);
         line(
@@ -237,6 +234,7 @@ export default function PianoRoll() {
         );
 
       /* humanized notes */
+      ctx.globalAlpha = 0.75;
       for (const note of humanizedNotes)
         rect(
           ctx,
@@ -247,6 +245,7 @@ export default function PianoRoll() {
           accent,
           black,
         );
+      ctx.globalAlpha = 1;
     }
 
     if (bottomPanelCtx.current) {
@@ -256,7 +255,6 @@ export default function PianoRoll() {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
       /* vertical beat guides */
-      ctx.strokeStyle = gray;
       for (const beat of beatGuides) {
         const x = timeScale(beat.left);
         line(
@@ -282,8 +280,6 @@ export default function PianoRoll() {
       );
 
       /* humanized velocities */
-      ctx.strokeStyle = accent;
-      ctx.lineWidth = 3;
       for (const note of humanizedNotes) {
         const x = timeScale(note.ticks);
         line(
@@ -315,7 +311,6 @@ export default function PianoRoll() {
       ctx.fill();
       ctx.globalAlpha = 1;
     }
-    console.timeEnd("a");
   });
 
   return (

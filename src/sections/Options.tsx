@@ -29,10 +29,10 @@ export default function Options() {
           }
         />
       </Tooltip>
-      <Tooltip content="Minimum amount of gap to leave between notes, in ticks.">
+      <Tooltip content="Minimum amount of gap to leave between notes, in ticks. Set to -1 to not de-overlap at all.">
         <Range
           label="Gap"
-          min={0}
+          min={-1}
           max={ppq / 4}
           step={1}
           value={options.gap}

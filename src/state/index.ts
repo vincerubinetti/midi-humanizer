@@ -212,6 +212,9 @@ const makeDriftCurve = (
   drift: Track["drift"],
   distribution: string,
 ) => {
+  /** skip work if no drift amount */
+  if (!drift.amount) return [];
+
   /** list of ticks */
   const ticks = [];
   /** list of corresponding drift values */
@@ -261,13 +264,11 @@ export const humanizedAtom = atom((get) => {
       get(tracksAtom)[trackIndex] ?? defaults;
 
     /** make drift curve for track */
-    const driftCurve = drift.amount
-      ? makeDriftCurve(
-          get(midiAtom)?.durationTicks || 0,
-          drift,
-          options.distribution,
-        )
-      : [];
+    const driftCurve = makeDriftCurve(
+      get(midiAtom)?.durationTicks || 0,
+      drift,
+      options.distribution,
+    );
 
     /** randomize start time */
     for (const [index, note] of track.notes.entries()) {

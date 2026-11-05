@@ -27,8 +27,7 @@
     "react-dom": "^19.3.1",
     "seedrandom": "^3.0.5",
     "tailwindcss": "^4.3.3",
-    "tippy.js": "^6.3.7",
-    "tone": "^15.1.22"
+    "tippy.js": "^6.3.7"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

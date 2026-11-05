@@ -3,11 +3,12 @@ import Checkbox from "@/components/Checkbox";
 import Range from "@/components/Range";
 import Select from "@/components/Select";
 import Tooltip from "@/components/Tooltip";
-import { defaults, setTrack, trackAtom } from "@/state";
+import { defaults, ppqAtom, setTrack, trackAtom } from "@/state";
 
 export default function Options() {
   /** global state */
   const { options } = useAtomValue(trackAtom);
+  const ppq = useAtomValue(ppqAtom);
 
   return (
     <fieldset>
@@ -31,7 +32,7 @@ export default function Options() {
         <Range
           label="Gap"
           min={0}
-          max={10}
+          max={ppq / 4}
           step={1}
           value={options.gap}
           defaultValue={defaults.options.gap}

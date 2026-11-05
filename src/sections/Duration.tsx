@@ -1,11 +1,12 @@
 import { useAtomValue } from "jotai";
 import Range from "@/components/Range";
 import Tooltip from "@/components/Tooltip";
-import { defaults, setTrack, trackAtom } from "@/state";
+import { defaults, ppqAtom, setTrack, trackAtom } from "@/state";
 
 export default function Duration() {
   /** global state */
   const { duration } = useAtomValue(trackAtom);
+  const ppq = useAtomValue(ppqAtom);
 
   return (
     <fieldset>
@@ -13,8 +14,8 @@ export default function Duration() {
       <Tooltip content="Max amount to shift durations randomly, in ticks.">
         <Range
           label="Rand."
-          min={-10}
-          max={10}
+          min={-ppq / 4}
+          max={ppq / 4}
           step={1}
           value={duration.randomness}
           defaultValue={defaults.duration.randomness}
@@ -43,8 +44,8 @@ export default function Duration() {
       <Tooltip content="How much to shift all durations, in ticks.">
         <Range
           label="Shift"
-          min={-10}
-          max={10}
+          min={-ppq / 4}
+          max={ppq / 4}
           step={1}
           value={duration.shift}
           defaultValue={defaults.duration.shift}

@@ -1,11 +1,12 @@
 import { useAtomValue } from "jotai";
 import Range from "@/components/Range";
 import Tooltip from "@/components/Tooltip";
-import { defaults, setTrack, trackAtom } from "@/state";
+import { defaults, ppqAtom, setTrack, trackAtom } from "@/state";
 
 export default function Drift() {
   /** global state */
   const { drift } = useAtomValue(trackAtom);
+  const ppq = useAtomValue(ppqAtom);
 
   return (
     <fieldset>
@@ -14,8 +15,8 @@ export default function Drift() {
       <Tooltip content="Max amount to drift starts randomly, in ticks.">
         <Range
           label="Rand."
-          min={-10}
-          max={10}
+          min={-ppq / 4}
+          max={ppq / 4}
           step={1}
           value={drift.amount}
           defaultValue={defaults.drift.amount}
@@ -44,8 +45,8 @@ export default function Drift() {
       <Tooltip content="Start drifting toward new value every this many of ticks. Lower = faster, higher = slower.">
         <Range
           label="Step"
-          min={96 * 0.5}
-          max={96 * 10}
+          min={ppq / 2}
+          max={ppq * 10}
           step={1}
           value={drift.step}
           defaultValue={defaults.drift.step}

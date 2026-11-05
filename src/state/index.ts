@@ -101,6 +101,9 @@ export const defaults = {
 
 export type Track = typeof defaults;
 
+/** (derived) ticks per quarter note */
+export const ppqAtom = atom((get) => get(midiAtom)?.header.ppq ?? 96);
+
 /** params for each track */
 export const tracksAtom = atom<Track[]>([]);
 

@@ -11,6 +11,7 @@ import {
   midiAtom,
   pitchGuidesAtom,
   pitchRangeAtom,
+  ppqAtom,
   trackAtom,
   trackIndexAtom,
 } from "@/state";
@@ -44,14 +45,15 @@ export default function PianoRoll() {
   const pitchRange = useAtomValue(pitchRangeAtom);
   const beatRange = useAtomValue(beatRangeAtom);
   const humanized = useAtomValue(humanizedAtom);
+  const ppq = useAtomValue(ppqAtom);
 
   /** dimensions of piano roll in canvas coordinates */
   const width = pitchGuides[0]?.width || 0;
   const height = beatGuides[0]?.height || 0;
   const top = 127 - pitchRange.max - 2;
   const bottom = 127 - pitchRange.min + 3;
-  const left = round(beatRange.min, midi?.header.ppq || 1, "floor");
-  const right = round(beatRange.max, midi?.header.ppq || 1, "ceil");
+  const left = round(beatRange.min, ppq, "floor");
+  const right = round(beatRange.max, ppq, "ceil");
 
   /** untransformed scales */
   const xBaseScale = d3
@@ -81,16 +83,22 @@ export default function PianoRoll() {
     .scale(transform.scale.y)
     .rescaleY(yBaseScale);
 
-  /** make path from drift curve */
-  const driftPath = [0]
-    .concat(driftCurve)
-    .concat(0)
-    .map((value, index) => (index % 10 === 0 ? { value, index } : null))
-    .filter((value) => value !== null)
-    .map(({ value, index }) => ({
-      x: xScale(index),
-      y: (bottomPanelHeight / 2) * (1 - (track.drift.amount * value) / 10),
-    }));
+  /** prune drift curve to reduce drawing */
+  const driftPruned = driftCurve
+    .map((value, index) =>
+      index % Math.ceil(ppq / 10) === 0 ? { value, index } : null,
+    )
+    .filter((value) => value !== null);
+  /** add endpoints */
+  driftPruned.unshift({ value: 0, index: -2 });
+  driftPruned.unshift({ value: driftPruned.at(0)?.value ?? 0, index: -1 });
+  driftPruned.push({ value: driftPruned.at(-1)?.value ?? 0, index: width + 1 });
+  driftPruned.push({ value: 0, index: width + 2 });
+  /** make path of points from drift curve */
+  const driftPoints = driftPruned.map(({ value, index }) => ({
+    x: xScale(index),
+    y: (bottomPanelHeight / 2) * (1 - (track.drift.amount * value) / (ppq / 4)),
+  }));
 
   /** get notes */
   const originalNotes = midi ? midi.tracks[trackIndex]?.notes || [] : [];
@@ -236,7 +244,7 @@ export default function PianoRoll() {
       ctx.fillStyle = accent;
       ctx.globalAlpha = 0.5;
       ctx.beginPath();
-      for (const [index, { x, y }] of driftPath.entries())
+      for (const [index, { x, y }] of driftPoints.entries())
         ctx[index ? "lineTo" : "moveTo"](x, y);
 
       ctx.fill();
@@ -266,7 +274,6 @@ export default function PianoRoll() {
         className="flex h-80 w-full resize-y flex-col overflow-hidden rounded-md border border-light-gray bg-white"
       >
         <canvas ref={topPanel} className="h-3/4 w-full" />
-
         <canvas ref={bottomPanel} className="h-1/4 w-full" />
       </div>
     </Tooltip>

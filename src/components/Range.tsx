@@ -1,6 +1,7 @@
 import type { ComponentProps, ReactNode } from "react";
 import { Slider } from "@base-ui/react";
 import clsx from "clsx";
+import { round } from "@/util/math";
 
 type Props = {
   label: ReactNode;
@@ -37,8 +38,8 @@ export default function Range({
         className="flex grow flex-col gap-2"
         value={value}
         onValueChange={onChange}
-        min={min}
-        max={max}
+        min={round(min, step, "floor")}
+        max={round(max, step, "ceil")}
         step={step}
       >
         <Slider.Control className="flex cursor-pointer touch-none items-center p-2 text-accent select-none group-hover:text-black">

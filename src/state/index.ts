@@ -32,7 +32,7 @@ export const load = async (
   const data = await file.arrayBuffer();
   const midi = new Midi(data);
 
-  console.debug({ midi, file, handle });
+  console.info({ midi, file, handle });
 
   /** name fallback */
   if (!midi.name) midi.name = startCase(file.name.replace(/\.midi?$/, ""));
@@ -69,7 +69,7 @@ export const save = async () => {
 
   const { file, handle } = picked;
 
-  console.debug({ file, handle });
+  console.info({ file, handle });
 
   /** update state */
   if (file) store.set(fileAtom, file);

@@ -66,7 +66,7 @@ export default function Options() {
           }
         />
       </Tooltip>
-      <Tooltip content="How to distribute randomness. Uniform = evenly from -100% to 100%, triangular = more likely to be near 0%.">
+      <Tooltip content="How to distribute randomness. Uniform means evenly from -100% to 100%. Triangular means more likely to be near 0%.">
         <Select
           label="Dist."
           options={[

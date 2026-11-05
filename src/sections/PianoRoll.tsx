@@ -85,13 +85,12 @@ export default function PianoRoll() {
   const driftPath = [0]
     .concat(driftCurve)
     .concat(0)
-    .map(
-      (value, index) =>
-        [
-          xScale(index),
-          (bottomPanelHeight / 2) * (1 - (track.drift.amount * value) / 10),
-        ] as const,
-    );
+    .map((value, index) => (index % 10 === 0 ? { value, index } : null))
+    .filter((value) => value !== null)
+    .map(({ value, index }) => ({
+      x: xScale(index),
+      y: (bottomPanelHeight / 2) * (1 - (track.drift.amount * value) / 10),
+    }));
 
   /** get notes */
   const originalNotes = midi ? midi.tracks[trackIndex]?.notes || [] : [];
@@ -237,8 +236,9 @@ export default function PianoRoll() {
       ctx.fillStyle = accent;
       ctx.globalAlpha = 0.5;
       ctx.beginPath();
-      for (const [index, [x, y]] of driftPath.entries())
+      for (const [index, { x, y }] of driftPath.entries())
         ctx[index ? "lineTo" : "moveTo"](x, y);
+
       ctx.fill();
       ctx.globalAlpha = 1;
     }

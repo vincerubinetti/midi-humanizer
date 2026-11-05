@@ -300,13 +300,18 @@ export default function PianoRoll() {
       /* drift shape */
       ctx.fillStyle = accent;
       ctx.globalAlpha = 0.5;
+      const points = range(bottomPanelWidth + 1)
+        .map((x) => ({ x, tick: timeScale.invert(x) }))
+        .filter(({ tick }) => tick >= 0 && tick <= width)
+        .map(({ x, tick }) => ({ x, y: driftScale(driftCurve(tick)) }));
+      points.unshift({ x: timeLeft, y: driftScale(0) });
+      points.push({ x: timeRight, y: driftScale(0) });
       ctx.beginPath();
-      ctx.moveTo(-2, driftScale(0));
-      for (const x of range(-2, bottomPanelWidth + 2, 2)) {
-        const y = driftScale(driftCurve(timeScale.invert(x)));
-        ctx.lineTo(x, y);
+      let first = true;
+      for (const { x, y } of points) {
+        ctx[first ? "moveTo" : "lineTo"](x, y);
+        first = false;
       }
-      ctx.lineTo(bottomPanelWidth + 2, driftScale(0));
       ctx.fill();
       ctx.globalAlpha = 1;
     }

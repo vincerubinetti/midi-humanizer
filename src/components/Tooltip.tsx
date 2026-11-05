@@ -34,7 +34,7 @@ export default function Tooltip({ children, content }: Props) {
   );
 }
 
-export function Arrow() {
+function Arrow() {
   return (
     <svg
       viewBox={[-arrow, -arrow, 2 * arrow, 2 * arrow].join(" ")}

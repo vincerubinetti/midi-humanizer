@@ -1,10 +1,11 @@
 import { useAtomValue } from "jotai";
 import Range from "@/components/Range";
 import Tooltip from "@/components/Tooltip";
-import { defaults, setTrack, trackAtom } from "@/state";
+import { defaultsAtom, setTrack, trackAtom } from "@/state";
 
 export default function Velocity() {
   /** global state */
+  const defaults = useAtomValue(defaultsAtom);
   const { velocity } = useAtomValue(trackAtom);
 
   return (

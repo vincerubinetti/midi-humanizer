@@ -1,10 +1,11 @@
 import { useAtomValue } from "jotai";
 import Range from "@/components/Range";
 import Tooltip from "@/components/Tooltip";
-import { defaults, ppqAtom, setTrack, trackAtom } from "@/state";
+import { defaultsAtom, ppqAtom, setTrack, trackAtom } from "@/state";
 
 export default function Drift() {
   /** global state */
+  const defaults = useAtomValue(defaultsAtom);
   const { drift } = useAtomValue(trackAtom);
   const ppq = useAtomValue(ppqAtom);
 
@@ -46,7 +47,7 @@ export default function Drift() {
         <Range
           label="Step"
           min={ppq / 2}
-          max={ppq * 10}
+          max={ppq * 4}
           step={1}
           value={drift.step}
           defaultValue={defaults.drift.step}

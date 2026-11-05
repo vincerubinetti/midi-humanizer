@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
-    "@d3fc/d3fc-zoom": "^1.2.0",
     "@fontsource-variable/outfit": "^5.3.0",
     "@reactuses/core": "^6.6.1",
     "@tonejs/midi": "^2.0.28",
@@ -26,8 +25,7 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "seedrandom": "^3.0.5",
-    "tailwindcss": "^4.3.3",
-    "tippy.js": "^6.3.7"
+    "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

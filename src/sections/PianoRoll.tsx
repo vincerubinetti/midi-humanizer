@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef } from "react";
 import { useElementSize } from "@reactuses/core/useElementSize";
 import * as d3 from "d3";
 import { useAtomValue } from "jotai";
+import { range } from "lodash";
 import Tooltip from "@/components/Tooltip";
 import {
   beatGuidesAtom,
@@ -12,7 +13,6 @@ import {
   pitchGuidesAtom,
   pitchRangeAtom,
   ppqAtom,
-  trackAtom,
   trackIndexAtom,
 } from "@/state";
 import { getTheme } from "@/util/dom";
@@ -38,7 +38,6 @@ export default function PianoRoll() {
   /** global state */
   const midi = useAtomValue(midiAtom);
   const trackIndex = useAtomValue(trackIndexAtom);
-  const track = useAtomValue(trackAtom);
   const driftCurve = useAtomValue(driftCurveAtom);
   const pitchGuides = useAtomValue(pitchGuidesAtom);
   const beatGuides = useAtomValue(beatGuidesAtom);
@@ -47,58 +46,51 @@ export default function PianoRoll() {
   const humanized = useAtomValue(humanizedAtom);
   const ppq = useAtomValue(ppqAtom);
 
-  /** dimensions of piano roll in canvas coordinates */
-  const width = pitchGuides[0]?.width || 0;
-  const height = beatGuides[0]?.height || 0;
-  const top = 127 - pitchRange.max - 2;
-  const bottom = 127 - pitchRange.min + 3;
+  /** bounds of notes */
   const left = round(beatRange.min, ppq, "floor");
   const right = round(beatRange.max, ppq, "ceil");
+  const bottom = pitchRange.min - 3;
+  const top = pitchRange.max + 2;
+
+  /** bounds of entire piano roll */
+  const width = pitchGuides[0]?.width || 0;
+  const height = beatGuides[0]?.height || 0;
 
   /** untransformed scales */
-  const xBaseScale = d3
+  const timeBaseScale = d3
     .scaleLinear()
     .domain([left, right])
     .range([0, topPanelWidth]);
-  const yBaseScale = d3
+  const pitchBaseScale = d3
     .scaleLinear()
-    .domain([top, bottom])
-    .range([0, topPanelHeight]);
+    .domain([bottom, top])
+    .range([topPanelHeight, 0]);
+  const velocityScale = d3
+    .scaleLinear()
+    .domain([127, 0])
+    .range([0, bottomPanelHeight]);
+  const driftScale = d3
+    .scaleLinear()
+    .domain([-ppq / 4, ppq / 4])
+    .range([0, bottomPanelHeight]);
 
   /** pan/zoom control */
   const [transform] = useTransform(container, {
-    left: xBaseScale(0),
-    right: xBaseScale(width),
-    top: yBaseScale(0),
-    bottom: yBaseScale(height),
+    left: timeBaseScale(0),
+    right: timeBaseScale(width),
+    bottom: pitchBaseScale(0),
+    top: pitchBaseScale(height),
   });
 
   /** transformed scales */
-  const xScale = d3.zoomIdentity
+  const timeScale = d3.zoomIdentity
     .translate(transform.translate.x, 0)
     .scale(transform.scale.x)
-    .rescaleX(xBaseScale);
-  const yScale = d3.zoomIdentity
+    .rescaleX(timeBaseScale);
+  const pitchScale = d3.zoomIdentity
     .translate(0, transform.translate.y)
     .scale(transform.scale.y)
-    .rescaleY(yBaseScale);
-
-  /** prune drift curve to reduce drawing */
-  const driftPruned = driftCurve
-    .map((value, index) =>
-      index % Math.ceil(ppq / 10) === 0 ? { value, index } : null,
-    )
-    .filter((value) => value !== null);
-  /** add endpoints */
-  driftPruned.unshift({ value: 0, index: -2 });
-  driftPruned.unshift({ value: driftPruned.at(0)?.value ?? 0, index: -1 });
-  driftPruned.push({ value: driftPruned.at(-1)?.value ?? 0, index: width + 1 });
-  driftPruned.push({ value: 0, index: width + 2 });
-  /** make path of points from drift curve */
-  const driftPoints = driftPruned.map(({ value, index }) => ({
-    x: xScale(index),
-    y: (bottomPanelHeight / 2) * (1 - (track.drift.amount * value) / (ppq / 4)),
-  }));
+    .rescaleY(pitchBaseScale);
 
   /** get notes */
   const originalNotes = midi ? midi.tracks[trackIndex]?.notes || [] : [];
@@ -131,14 +123,62 @@ export default function PianoRoll() {
     }
   }, [topPanelWidth, topPanelHeight, bottomPanelWidth, bottomPanelHeight]);
 
+  /** draw utils */
+  const rect = (
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    fill?: string,
+    stroke?: string,
+    thickness = 1,
+  ) => {
+    if (x + width < 0 || x > ctx.canvas.width) return;
+    if (y + height < 0 || y > ctx.canvas.height) return;
+    if (fill) {
+      ctx.fillStyle = fill;
+      ctx.fillRect(x, y, width, height);
+    }
+    if (stroke) {
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = thickness;
+      ctx.strokeRect(x, y, width, height);
+    }
+  };
+  const line = (
+    ctx: CanvasRenderingContext2D,
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    stroke: string,
+    thickness = 1,
+  ) => {
+    if (x1 > x2) [x1, x2] = [x2, x1];
+    if (y1 > y2) [y1, y2] = [y2, y1];
+    if (x2 < 0 || x1 > ctx.canvas.width) return;
+    if (y2 < 0 || y1 > ctx.canvas.height) return;
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = thickness;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+  };
+
   /** draw */
   useLayoutEffect(() => {
+    console.time("a");
+
     /** common values */
-    const x0 = xScale(0);
-    const y0 = yScale(0);
-    const y1 = yScale(1);
-    const xWidth = xScale(width);
-    const yHeight = yScale(height);
+    const timeLeft = timeScale(0);
+    const timeRight = timeScale(width);
+    const pitchBottom = pitchScale(height);
+    const pitchUnit = pitchScale(0) - pitchScale(1);
+    const pitchTop = pitchScale(0);
+    const velocityBottom = velocityScale(0);
+    const velocityTop = velocityScale(127);
 
     if (topPanelCtx.current) {
       const ctx = topPanelCtx.current;
@@ -148,55 +188,65 @@ export default function PianoRoll() {
 
       /* horizontal pitch guides */
       for (const pitch of pitchGuides) {
-        ctx.fillStyle = pitch.black ? offWhite : white;
-        ctx.fillRect(x0, yScale(pitch.top), xScale(pitch.width) - x0, y1 - y0);
+        rect(
+          ctx,
+          timeLeft,
+          pitchScale(pitch.top),
+          timeScale(pitch.width) - timeLeft,
+          pitchUnit,
+          pitch.black ? offWhite : white,
+        );
       }
 
       /* vertical beat guides */
       ctx.strokeStyle = gray;
       for (const beat of beatGuides) {
-        const x = xScale(beat.left);
-        if (x < 0 || x > topPanelWidth) continue;
-        ctx.beginPath();
-        ctx.moveTo(x, y0);
-        ctx.lineTo(x, yHeight);
-        ctx.lineWidth =
-          beat.type === "major" ? 1 : beat.type === "minor" ? 0.5 : 0.25;
-        ctx.stroke();
+        const x = timeScale(beat.left);
+        line(
+          ctx,
+          x,
+          pitchBottom,
+          x,
+          pitchTop,
+          gray,
+          beat.type === "major" ? 1 : beat.type === "minor" ? 0.5 : 0.25,
+        );
       }
 
       /* border */
-      ctx.strokeStyle = black;
-      ctx.lineWidth = 1;
-      ctx.strokeRect(x0, y0, xWidth - x0, yHeight - y0);
+      rect(
+        ctx,
+        timeLeft,
+        pitchBottom,
+        timeRight - timeLeft,
+        pitchTop - pitchBottom,
+        "",
+        black,
+      );
 
       /* original notes */
-      ctx.strokeStyle = gray;
-      ctx.lineWidth = 1;
-      for (const note of originalNotes) {
-        const x = xScale(note.ticks);
-        const y = yScale(127 - note.midi);
-        const width = xScale(note.durationTicks) - x0;
-        const height = y1 - y0;
-        if (x + width < 0 || x > topPanelWidth) continue;
-        if (y + height < 0 || y > topPanelHeight) continue;
-        ctx.strokeRect(x, y, width, height);
-      }
+      for (const note of originalNotes)
+        rect(
+          ctx,
+          timeScale(note.ticks),
+          pitchScale(note.midi),
+          timeScale(note.durationTicks) - timeLeft,
+          pitchUnit,
+          "",
+          gray,
+        );
 
       /* humanized notes */
-      ctx.fillStyle = accent;
-      ctx.strokeStyle = black;
-      ctx.lineWidth = 1;
-      for (const note of humanizedNotes) {
-        const x = xScale(note.ticks);
-        const y = yScale(127 - note.midi);
-        const width = xScale(note.durationTicks) - x0;
-        const height = y1 - y0;
-        if (x + width < 0 || x > topPanelWidth) continue;
-        if (y + height < 0 || y > topPanelHeight) continue;
-        ctx.fillRect(x, y, width, height);
-        ctx.strokeRect(x, y, width, height);
-      }
+      for (const note of humanizedNotes)
+        rect(
+          ctx,
+          timeScale(note.ticks),
+          pitchScale(note.midi),
+          timeScale(note.durationTicks) - timeLeft,
+          pitchUnit,
+          accent,
+          black,
+        );
     }
 
     if (bottomPanelCtx.current) {
@@ -208,48 +258,59 @@ export default function PianoRoll() {
       /* vertical beat guides */
       ctx.strokeStyle = gray;
       for (const beat of beatGuides) {
-        const x = xScale(beat.left);
-        if (x < 0 || x > topPanelWidth) continue;
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, bottomPanelHeight);
-        ctx.lineWidth =
-          beat.type === "major" ? 1 : beat.type === "minor" ? 0.5 : 0.25;
-        ctx.stroke();
+        const x = timeScale(beat.left);
+        line(
+          ctx,
+          x,
+          velocityBottom,
+          x,
+          velocityTop,
+          gray,
+          beat.type === "major" ? 1 : beat.type === "minor" ? 0.5 : 0.25,
+        );
       }
 
       /* border */
-      ctx.strokeStyle = black;
-      ctx.lineWidth = 1;
-      ctx.strokeRect(
-        x0,
-        0,
-        xScale(midi?.durationTicks || 0) - x0,
-        bottomPanelHeight,
+      rect(
+        ctx,
+        timeLeft,
+        velocityBottom,
+        timeRight - timeLeft,
+        velocityTop - velocityBottom,
+        "",
+        black,
       );
 
       /* humanized velocities */
       ctx.strokeStyle = accent;
       ctx.lineWidth = 3;
       for (const note of humanizedNotes) {
-        const x = xScale(note.ticks);
-        if (x < 0 || x > topPanelWidth) continue;
-        ctx.beginPath();
-        ctx.moveTo(x, (1 - note.velocity) * bottomPanelHeight);
-        ctx.lineTo(x, bottomPanelHeight);
-        ctx.stroke();
+        const x = timeScale(note.ticks);
+        line(
+          ctx,
+          x,
+          velocityBottom,
+          x,
+          velocityScale(note.velocity * 127),
+          accent,
+          3,
+        );
       }
 
       /* drift shape */
       ctx.fillStyle = accent;
       ctx.globalAlpha = 0.5;
       ctx.beginPath();
-      for (const [index, { x, y }] of driftPoints.entries())
-        ctx[index ? "lineTo" : "moveTo"](x, y);
-
+      ctx.moveTo(-2, driftScale(0));
+      for (const x of range(-2, bottomPanelWidth + 2, 2)) {
+        const y = driftScale(driftCurve(timeScale.invert(x)));
+        ctx.lineTo(x, y);
+      }
+      ctx.lineTo(bottomPanelWidth + 2, driftScale(0));
       ctx.fill();
       ctx.globalAlpha = 1;
     }
+    console.timeEnd("a");
   });
 
   return (

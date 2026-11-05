@@ -1,10 +1,11 @@
 import { useAtomValue } from "jotai";
 import Range from "@/components/Range";
 import Tooltip from "@/components/Tooltip";
-import { defaults, ppqAtom, setTrack, trackAtom } from "@/state";
+import { defaultsAtom, ppqAtom, setTrack, trackAtom } from "@/state";
 
 export default function Start() {
   /** global state */
+  const defaults = useAtomValue(defaultsAtom);
   const { start } = useAtomValue(trackAtom);
   const ppq = useAtomValue(ppqAtom);
 

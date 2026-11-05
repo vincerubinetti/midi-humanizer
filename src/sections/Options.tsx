@@ -3,10 +3,11 @@ import Checkbox from "@/components/Checkbox";
 import Range from "@/components/Range";
 import Select from "@/components/Select";
 import Tooltip from "@/components/Tooltip";
-import { defaults, ppqAtom, setTrack, trackAtom } from "@/state";
+import { defaultsAtom, ppqAtom, setTrack, trackAtom } from "@/state";
 
 export default function Options() {
   /** global state */
+  const defaults = useAtomValue(defaultsAtom);
   const { options } = useAtomValue(trackAtom);
   const ppq = useAtomValue(ppqAtom);
 

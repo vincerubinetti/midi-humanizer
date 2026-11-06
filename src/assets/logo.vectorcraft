@@ -25,7 +25,7 @@
     "layers": [
       {
         "id": 18,
-        "name": "notes",
+        "name": "brush",
         "kind": {
           "type": "layer",
           "color": {
@@ -35,7 +35,8 @@
           "printable": true,
           "children": [
             {
-              "id": 19,
+              "id": 29,
+              "name": "top bar",
               "appearance": {
                 "items": [
                   {
@@ -55,7 +56,7 @@
                         "b": 0.0
                       }
                     },
-                    "width": 10.0,
+                    "width": 8.0,
                     "brush": "6 pt. Flat"
                   }
                 ]
@@ -69,52 +70,6 @@
                         {
                           "p": [
                             150.0,
-                            450.0
-                          ],
-                          "out": [
-                            125.19305308215827,
-                            379.71365039944857
-                          ]
-                        },
-                        {
-                          "p": [
-                            50.0,
-                            500.0
-                          ],
-                          "in": [
-                            8.655088470263848,
-                            437.98263270539576
-                          ],
-                          "out": [
-                            61.06518487810989,
-                            516.5977773171649
-                          ],
-                          "kind": "Smooth"
-                        },
-                        {
-                          "p": [
-                            100.0,
-                            525.0
-                          ],
-                          "in": [
-                            80.0826672194022,
-                            526.106518487811
-                          ],
-                          "out": [
-                            137.5,
-                            522.9166666666666
-                          ],
-                          "kind": "Smooth"
-                        },
-                        {
-                          "p": [
-                            150.0,
-                            450.0
-                          ]
-                        },
-                        {
-                          "p": [
-                            150.0,
                             50.0
                           ]
                         },
@@ -122,52 +77,6 @@
                           "p": [
                             550.0,
                             50.0
-                          ]
-                        },
-                        {
-                          "p": [
-                            550.0,
-                            400.0
-                          ]
-                        },
-                        {
-                          "p": [
-                            500.0,
-                            475.0
-                          ],
-                          "in": [
-                            537.5,
-                            472.9166666666667
-                          ],
-                          "out": [
-                            480.0826672194022,
-                            476.106518487811
-                          ],
-                          "kind": "Smooth"
-                        },
-                        {
-                          "p": [
-                            450.0,
-                            450.0
-                          ],
-                          "in": [
-                            461.0651848781099,
-                            466.59777731716486
-                          ],
-                          "out": [
-                            408.6550884702639,
-                            387.98263270539576
-                          ],
-                          "kind": "Smooth"
-                        },
-                        {
-                          "p": [
-                            550.0,
-                            400.0
-                          ],
-                          "in": [
-                            525.1930530821583,
-                            329.71365039944857
                           ]
                         }
                       ],
@@ -180,6 +89,7 @@
             },
             {
               "id": 21,
+              "name": "bottom bar",
               "appearance": {
                 "items": [
                   {
@@ -199,7 +109,7 @@
                         "b": 0.0
                       }
                     },
-                    "width": 10.0,
+                    "width": 8.0,
                     "brush": "6 pt. Flat"
                   }
                 ]
@@ -231,7 +141,8 @@
               "bbox_angle": 9.0
             },
             {
-              "id": 22,
+              "id": 31,
+              "name": "left stem",
               "appearance": {
                 "items": [
                   {
@@ -251,7 +162,60 @@
                         "b": 0.0
                       }
                     },
-                    "width": 10.0,
+                    "width": 8.0,
+                    "brush": "6 pt. Flat"
+                  }
+                ]
+              },
+              "kind": {
+                "type": "path",
+                "path": {
+                  "subpaths": [
+                    {
+                      "anchors": [
+                        {
+                          "p": [
+                            150.0,
+                            50.0
+                          ]
+                        },
+                        {
+                          "p": [
+                            150.0,
+                            462.5
+                          ]
+                        }
+                      ],
+                      "closed": false
+                    }
+                  ]
+                }
+              },
+              "bbox_angle": 9.0
+            },
+            {
+              "id": 22,
+              "name": "middle stem",
+              "appearance": {
+                "items": [
+                  {
+                    "kind": "fill",
+                    "paint": {
+                      "type": "none"
+                    }
+                  },
+                  {
+                    "kind": "stroke",
+                    "paint": {
+                      "type": "solid",
+                      "color": {
+                        "model": "rgb",
+                        "r": 0.0,
+                        "g": 0.0,
+                        "b": 0.0
+                      }
+                    },
+                    "width": 8.0,
                     "brush": "6 pt. Flat"
                   }
                 ]
@@ -271,47 +235,7 @@
                         {
                           "p": [
                             362.5,
-                            300.0
-                          ]
-                        },
-                        {
-                          "p": [
-                            312.5,
-                            375.0
-                          ],
-                          "in": [
-                            350.0,
-                            372.9166666666667
-                          ],
-                          "out": [
-                            292.5826672194022,
-                            376.106518487811
-                          ],
-                          "kind": "Smooth"
-                        },
-                        {
-                          "p": [
-                            262.5,
-                            350.0
-                          ],
-                          "in": [
-                            273.5651848781099,
-                            366.59777731716486
-                          ],
-                          "out": [
-                            221.15508847026385,
-                            287.98263270539576
-                          ],
-                          "kind": "Smooth"
-                        },
-                        {
-                          "p": [
-                            362.5,
-                            300.0
-                          ],
-                          "in": [
-                            337.6930530821583,
-                            229.71365039944854
+                            312.5
                           ]
                         }
                       ],
@@ -321,6 +245,786 @@
                 }
               },
               "bbox_angle": 9.0
+            },
+            {
+              "id": 30,
+              "name": "right stem",
+              "appearance": {
+                "items": [
+                  {
+                    "kind": "fill",
+                    "paint": {
+                      "type": "none"
+                    }
+                  },
+                  {
+                    "kind": "stroke",
+                    "paint": {
+                      "type": "solid",
+                      "color": {
+                        "model": "rgb",
+                        "r": 0.0,
+                        "g": 0.0,
+                        "b": 0.0
+                      }
+                    },
+                    "width": 8.0,
+                    "brush": "6 pt. Flat"
+                  }
+                ]
+              },
+              "kind": {
+                "type": "path",
+                "path": {
+                  "subpaths": [
+                    {
+                      "anchors": [
+                        {
+                          "p": [
+                            550.0,
+                            50.0
+                          ]
+                        },
+                        {
+                          "p": [
+                            550.0,
+                            412.5
+                          ]
+                        }
+                      ],
+                      "closed": false
+                    }
+                  ]
+                }
+              },
+              "bbox_angle": 9.0
+            },
+            {
+              "id": 67,
+              "name": "left head",
+              "appearance": {
+                "items": [
+                  {
+                    "kind": "fill",
+                    "paint": {
+                      "type": "none"
+                    }
+                  },
+                  {
+                    "kind": "stroke",
+                    "paint": {
+                      "type": "solid",
+                      "color": {
+                        "model": "rgb",
+                        "r": 0.0,
+                        "g": 0.0,
+                        "b": 0.0
+                      }
+                    },
+                    "width": 8.0,
+                    "brush": "6 pt. Flat"
+                  }
+                ]
+              },
+              "kind": {
+                "type": "path",
+                "path": {
+                  "subpaths": [
+                    {
+                      "anchors": [
+                        {
+                          "p": [
+                            150.0,
+                            450.0
+                          ],
+                          "in": [
+                            125.0,
+                            387.5
+                          ]
+                        },
+                        {
+                          "p": [
+                            150.0,
+                            475.0
+                          ],
+                          "out": [
+                            150.0,
+                            525.0
+                          ],
+                          "kind": "Smooth"
+                        },
+                        {
+                          "p": [
+                            37.5,
+                            500.0
+                          ],
+                          "in": [
+                            62.5,
+                            562.5
+                          ],
+                          "out": [
+                            12.5,
+                            437.5
+                          ],
+                          "kind": "Smooth"
+                        }
+                      ],
+                      "closed": true
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": 65,
+              "name": "middle head",
+              "appearance": {
+                "items": [
+                  {
+                    "kind": "fill",
+                    "paint": {
+                      "type": "none"
+                    }
+                  },
+                  {
+                    "kind": "stroke",
+                    "paint": {
+                      "type": "solid",
+                      "color": {
+                        "model": "rgb",
+                        "r": 0.0,
+                        "g": 0.0,
+                        "b": 0.0
+                      }
+                    },
+                    "width": 8.0,
+                    "brush": "6 pt. Flat"
+                  }
+                ]
+              },
+              "kind": {
+                "type": "path",
+                "path": {
+                  "subpaths": [
+                    {
+                      "anchors": [
+                        {
+                          "p": [
+                            362.5,
+                            300.0
+                          ],
+                          "in": [
+                            337.5,
+                            237.5
+                          ]
+                        },
+                        {
+                          "p": [
+                            362.5,
+                            325.0
+                          ],
+                          "out": [
+                            362.5,
+                            375.0
+                          ],
+                          "kind": "Smooth"
+                        },
+                        {
+                          "p": [
+                            250.0,
+                            350.0
+                          ],
+                          "in": [
+                            275.0,
+                            412.5
+                          ],
+                          "out": [
+                            225.0,
+                            287.5
+                          ],
+                          "kind": "Smooth"
+                        }
+                      ],
+                      "closed": true
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": 66,
+              "name": "right head",
+              "appearance": {
+                "items": [
+                  {
+                    "kind": "fill",
+                    "paint": {
+                      "type": "none"
+                    }
+                  },
+                  {
+                    "kind": "stroke",
+                    "paint": {
+                      "type": "solid",
+                      "color": {
+                        "model": "rgb",
+                        "r": 0.0,
+                        "g": 0.0,
+                        "b": 0.0
+                      }
+                    },
+                    "width": 8.0,
+                    "brush": "6 pt. Flat"
+                  }
+                ]
+              },
+              "kind": {
+                "type": "path",
+                "path": {
+                  "subpaths": [
+                    {
+                      "anchors": [
+                        {
+                          "p": [
+                            550.0,
+                            400.0
+                          ],
+                          "in": [
+                            525.0,
+                            337.5
+                          ]
+                        },
+                        {
+                          "p": [
+                            550.0,
+                            425.0
+                          ],
+                          "out": [
+                            550.0,
+                            475.0
+                          ],
+                          "kind": "Smooth"
+                        },
+                        {
+                          "p": [
+                            437.5,
+                            450.0
+                          ],
+                          "in": [
+                            462.5,
+                            512.5
+                          ],
+                          "out": [
+                            412.5,
+                            387.5
+                          ],
+                          "kind": "Smooth"
+                        }
+                      ],
+                      "closed": true
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "id": 54,
+        "name": "mask",
+        "kind": {
+          "type": "layer",
+          "color": {
+            "Preset": 1
+          },
+          "template": false,
+          "printable": true,
+          "children": [
+            {
+              "id": 62,
+              "name": "top bar",
+              "appearance": {
+                "items": [
+                  {
+                    "kind": "fill",
+                    "paint": {
+                      "type": "none"
+                    }
+                  },
+                  {
+                    "kind": "stroke",
+                    "paint": {
+                      "type": "solid",
+                      "color": {
+                        "model": "rgb",
+                        "r": 0.0,
+                        "g": 0.9019608,
+                        "b": 0.0
+                      }
+                    },
+                    "width": 50.0
+                  }
+                ]
+              },
+              "kind": {
+                "type": "path",
+                "path": {
+                  "subpaths": [
+                    {
+                      "anchors": [
+                        {
+                          "p": [
+                            100.0,
+                            50.0
+                          ]
+                        },
+                        {
+                          "p": [
+                            600.0,
+                            50.0
+                          ]
+                        }
+                      ],
+                      "closed": false
+                    }
+                  ]
+                }
+              },
+              "bbox_angle": 9.0
+            },
+            {
+              "id": 61,
+              "name": "bottom bar",
+              "appearance": {
+                "items": [
+                  {
+                    "kind": "fill",
+                    "paint": {
+                      "type": "none"
+                    }
+                  },
+                  {
+                    "kind": "stroke",
+                    "paint": {
+                      "type": "solid",
+                      "color": {
+                        "model": "rgb",
+                        "r": 0.0,
+                        "g": 0.9019608,
+                        "b": 0.0
+                      }
+                    },
+                    "width": 50.0
+                  }
+                ]
+              },
+              "kind": {
+                "type": "path",
+                "path": {
+                  "subpaths": [
+                    {
+                      "anchors": [
+                        {
+                          "p": [
+                            100.0,
+                            125.0
+                          ]
+                        },
+                        {
+                          "p": [
+                            600.0,
+                            125.0
+                          ]
+                        }
+                      ],
+                      "closed": false
+                    }
+                  ]
+                }
+              },
+              "bbox_angle": 9.0
+            },
+            {
+              "id": 60,
+              "name": "left stem",
+              "appearance": {
+                "items": [
+                  {
+                    "kind": "fill",
+                    "paint": {
+                      "type": "none"
+                    }
+                  },
+                  {
+                    "kind": "stroke",
+                    "paint": {
+                      "type": "solid",
+                      "color": {
+                        "model": "rgb",
+                        "r": 0.0,
+                        "g": 0.9019608,
+                        "b": 0.0
+                      }
+                    },
+                    "width": 50.0
+                  }
+                ]
+              },
+              "kind": {
+                "type": "path",
+                "path": {
+                  "subpaths": [
+                    {
+                      "anchors": [
+                        {
+                          "p": [
+                            150.0,
+                            0.0
+                          ]
+                        },
+                        {
+                          "p": [
+                            150.0,
+                            487.5
+                          ]
+                        }
+                      ],
+                      "closed": false
+                    }
+                  ]
+                }
+              },
+              "bbox_angle": 9.0
+            },
+            {
+              "id": 59,
+              "name": "middle stem",
+              "appearance": {
+                "items": [
+                  {
+                    "kind": "fill",
+                    "paint": {
+                      "type": "none"
+                    }
+                  },
+                  {
+                    "kind": "stroke",
+                    "paint": {
+                      "type": "solid",
+                      "color": {
+                        "model": "rgb",
+                        "r": 0.0,
+                        "g": 0.9019608,
+                        "b": 0.0
+                      }
+                    },
+                    "width": 50.0
+                  }
+                ]
+              },
+              "kind": {
+                "type": "path",
+                "path": {
+                  "subpaths": [
+                    {
+                      "anchors": [
+                        {
+                          "p": [
+                            362.5,
+                            50.0
+                          ]
+                        },
+                        {
+                          "p": [
+                            362.5,
+                            337.5
+                          ]
+                        }
+                      ],
+                      "closed": false
+                    }
+                  ]
+                }
+              },
+              "bbox_angle": 9.0
+            },
+            {
+              "id": 58,
+              "name": "right stem",
+              "appearance": {
+                "items": [
+                  {
+                    "kind": "fill",
+                    "paint": {
+                      "type": "none"
+                    }
+                  },
+                  {
+                    "kind": "stroke",
+                    "paint": {
+                      "type": "solid",
+                      "color": {
+                        "model": "rgb",
+                        "r": 0.0,
+                        "g": 0.9019608,
+                        "b": 0.0
+                      }
+                    },
+                    "width": 50.0
+                  }
+                ]
+              },
+              "kind": {
+                "type": "path",
+                "path": {
+                  "subpaths": [
+                    {
+                      "anchors": [
+                        {
+                          "p": [
+                            550.0,
+                            0.0
+                          ]
+                        },
+                        {
+                          "p": [
+                            550.0,
+                            437.5
+                          ]
+                        }
+                      ],
+                      "closed": false
+                    }
+                  ]
+                }
+              },
+              "bbox_angle": 9.0
+            },
+            {
+              "id": 57,
+              "name": "left head",
+              "appearance": {
+                "items": [
+                  {
+                    "kind": "fill",
+                    "paint": {
+                      "type": "none"
+                    }
+                  },
+                  {
+                    "kind": "stroke",
+                    "paint": {
+                      "type": "solid",
+                      "color": {
+                        "model": "rgb",
+                        "r": 0.0,
+                        "g": 0.9019608,
+                        "b": 0.0
+                      }
+                    },
+                    "width": 50.0
+                  }
+                ]
+              },
+              "kind": {
+                "type": "path",
+                "path": {
+                  "subpaths": [
+                    {
+                      "anchors": [
+                        {
+                          "p": [
+                            150.0,
+                            462.5
+                          ],
+                          "out": [
+                            150.0,
+                            525.0
+                          ],
+                          "kind": "Smooth"
+                        },
+                        {
+                          "p": [
+                            37.5,
+                            500.0
+                          ],
+                          "in": [
+                            62.5,
+                            562.5
+                          ],
+                          "out": [
+                            12.5,
+                            437.5
+                          ],
+                          "kind": "Smooth"
+                        },
+                        {
+                          "p": [
+                            150.0,
+                            450.0
+                          ],
+                          "in": [
+                            125.0,
+                            387.5
+                          ]
+                        }
+                      ],
+                      "closed": true
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": 63,
+              "name": "middle head",
+              "appearance": {
+                "items": [
+                  {
+                    "kind": "fill",
+                    "paint": {
+                      "type": "none"
+                    }
+                  },
+                  {
+                    "kind": "stroke",
+                    "paint": {
+                      "type": "solid",
+                      "color": {
+                        "model": "rgb",
+                        "r": 0.0,
+                        "g": 0.9019608,
+                        "b": 0.0
+                      }
+                    },
+                    "width": 50.0
+                  }
+                ]
+              },
+              "kind": {
+                "type": "path",
+                "path": {
+                  "subpaths": [
+                    {
+                      "anchors": [
+                        {
+                          "p": [
+                            362.5,
+                            312.5
+                          ],
+                          "out": [
+                            362.5,
+                            375.0
+                          ],
+                          "kind": "Smooth"
+                        },
+                        {
+                          "p": [
+                            250.0,
+                            350.0
+                          ],
+                          "in": [
+                            275.0,
+                            412.5
+                          ],
+                          "out": [
+                            225.0,
+                            287.5
+                          ],
+                          "kind": "Smooth"
+                        },
+                        {
+                          "p": [
+                            362.5,
+                            300.0
+                          ],
+                          "in": [
+                            337.5,
+                            237.5
+                          ]
+                        }
+                      ],
+                      "closed": true
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "id": 64,
+              "name": "right head",
+              "appearance": {
+                "items": [
+                  {
+                    "kind": "fill",
+                    "paint": {
+                      "type": "none"
+                    }
+                  },
+                  {
+                    "kind": "stroke",
+                    "paint": {
+                      "type": "solid",
+                      "color": {
+                        "model": "rgb",
+                        "r": 0.0,
+                        "g": 0.9019608,
+                        "b": 0.0
+                      }
+                    },
+                    "width": 50.0
+                  }
+                ]
+              },
+              "kind": {
+                "type": "path",
+                "path": {
+                  "subpaths": [
+                    {
+                      "anchors": [
+                        {
+                          "p": [
+                            550.0,
+                            412.5
+                          ],
+                          "out": [
+                            550.0,
+                            475.0
+                          ],
+                          "kind": "Smooth"
+                        },
+                        {
+                          "p": [
+                            437.5,
+                            450.0
+                          ],
+                          "in": [
+                            462.5,
+                            512.5
+                          ],
+                          "out": [
+                            412.5,
+                            387.5
+                          ],
+                          "kind": "Smooth"
+                        },
+                        {
+                          "p": [
+                            550.0,
+                            400.0
+                          ],
+                          "in": [
+                            525.0,
+                            337.5
+                          ]
+                        }
+                      ],
+                      "closed": true
+                    }
+                  ]
+                }
+              }
             }
           ]
         }
@@ -1258,7 +1962,7 @@
     },
     "raster_effects_ppi": 72.0,
     "images": {},
-    "next_id": 29,
+    "next_id": 68,
     "unknown": {
       "currentBrush": "6 pt. Flat"
     },
@@ -1272,15 +1976,15 @@
       "copyrightNotice": "",
       "copyrightUrl": "",
       "created": 1793727139,
-      "modified": 1793731199
+      "modified": 1794007041
     },
     "last_view": {
       "name": "",
       "center": {
-        "x": 370.5362800629255,
-        "y": 331.19656621821053
+        "x": 300.0,
+        "y": 300.0
       },
-      "zoom": 1.3390413474273,
+      "zoom": 1.3066666666666666,
       "rotation": 0.0
     }
   },

@@ -27,7 +27,7 @@ export default function Track() {
         onChange={(value) => setTrackIndex(Number(value))}
         aria-label="Track"
       />
-      <Tooltip content="Whether to update all tracks together. If on, editing a control sets value for all tracks, not just selected one.">
+      <Tooltip content="If on, editing a control sets value for all tracks, not just selected one.">
         <Checkbox
           className="flex!"
           label="Edit all"

@@ -96,7 +96,7 @@ export const defaultsAtom = atom((get) => ({
     gap: 0,
     legato: false,
     polyphonic: true,
-    distribution: "uniform",
+    power: 1,
   },
 }));
 
@@ -226,10 +226,7 @@ const makeDriftCurve = (track: Params) => {
   for (let tick = 0; tick <= store.get(durationAtom); tick += step)
     values.push(
       track.drift.amount *
-        random(
-          ["drift", tick / step, track.drift.seed],
-          track.options.distribution,
-        ),
+        random(["drift", tick / step, track.drift.seed], track.options.power),
     );
 
   /** smooth curve through control points */
@@ -262,8 +259,7 @@ export const humanizedAtom = atom((get) => {
       note.ticks =
         note.ticks +
         /** spread */
-        random(["start", index, start.seed], options.distribution) *
-          start.randomness +
+        random(["start", index, start.seed], options.power) * start.randomness +
         /** drift */
         driftCurve(note.ticks) +
         /** transform */
@@ -309,7 +305,7 @@ export const humanizedAtom = atom((get) => {
       note.durationTicks = Math.round(
         (note.durationTicks +
           /** spread */
-          random(["duration", index, duration.seed], options.distribution) *
+          random(["duration", index, duration.seed], options.power) *
             duration.randomness +
           /** transform */
           duration.shift) *
@@ -340,7 +336,7 @@ export const humanizedAtom = atom((get) => {
       note.velocity =
         /** spread */
         (note.velocity +
-          random(["velocity", index, velocity.seed], options.distribution) *
+          random(["velocity", index, velocity.seed], options.power) *
             (velocity.randomness / 127) +
           /** transform */
           velocity.shift / 127) *

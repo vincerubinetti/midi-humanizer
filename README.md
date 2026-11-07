@@ -1,3 +1,5 @@
+<img height="300" src="https://raw.githubusercontent.com/vincerubinetti/midi-humanizer/refs/heads/main/public/share.png" />
+
 # MIDI Humanizer
 
 A tool to randomize note starts, durations, tempo drift, and velocities in a MIDI file.
